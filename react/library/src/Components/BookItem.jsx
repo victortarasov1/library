@@ -35,7 +35,7 @@ const BookItem = ({book, remove, update}) =>{
 
         ):(
           <div style = {{textAlign: 'right'}}>
-            <Button variant = "danger" onClick = {() => remove(book)}> delete </Button>
+            <Button variant = "danger" onClick = {() => remove(book)}> remove </Button>
             <Button onClick = {() => fetchBookWithAuthors()}> open </Button>
           </div>
         )}

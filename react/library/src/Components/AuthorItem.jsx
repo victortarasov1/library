@@ -49,8 +49,8 @@ const AuthorItem = ({author, remove, change}) => {
         </div>
       ):(
         <div style = {{textAlign: 'center'}}>
-          <Button variant="primary" onClick = {() => fetchAuthorWithBooks()}> open </Button>
           <Button variant="danger" onClick = {() => remove(author)}> remove </Button>
+          <Button variant="primary" onClick = {() => fetchAuthorWithBooks()}> open </Button>
         </div>
       )
       }
