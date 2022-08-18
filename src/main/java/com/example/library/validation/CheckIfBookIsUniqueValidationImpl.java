@@ -16,18 +16,6 @@ public class CheckIfBookIsUniqueValidationImpl implements ConstraintValidator <C
 	@Override
 	public boolean isValid(BookDto value, ConstraintValidatorContext context) {
 		try {
-			/*if(value.getId() == null) {
-				
-				Book book = bookService.findEquals(value.toBook());
-				System.out.println(book.getTitle());
-				if(book.getId() == null) {
-					return true;
-				} else {
-					return false;
-				}
-				
-			}
-			return true;*/
 			Book book = bookService.findEquals(value.toBook());
 			if (book.getId() == null || book.getId().equals(value.getId())) {
 				return true;

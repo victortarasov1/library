@@ -16,16 +16,6 @@ public class CheckIfAuthorIsUniqueValidationImpl implements ConstraintValidator 
 	@Override
 	public boolean isValid(AuthorFullDto value, ConstraintValidatorContext context) {
 		try {
-			/*if(value.getId() == null) {
-				Author author = authorService.findEquals(value.toAuthor());
-				if(author.getId() == null) {
-					return true;
-				} else {
-					return false;
-				}
-			} else {
-				return true;
-			}*/
 			Author author = authorService.findEquals(value.toAuthor());
 			if (author.getId() == null || author.getId().equals(value.getId())) {
 				return true;

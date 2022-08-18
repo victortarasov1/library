@@ -13,7 +13,7 @@ import javax.validation.Payload;
 @Retention(RetentionPolicy.RUNTIME)
 @Constraint(validatedBy = CheckIfAuthorIsUniqueValidationImpl.class)
 public @interface CheckIfAuthorIsUniqueValidation {
-	 String message() default "date error! A day has already been set for this date!";
+	 String message() default "This author is already setted!";
 	 Class<?>[] groups() default {};
 	 Class<? extends Payload>[] payload() default {};
 }
