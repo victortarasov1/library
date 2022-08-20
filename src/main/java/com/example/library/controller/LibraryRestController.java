@@ -23,7 +23,9 @@ import com.example.library.dto.AuthorDto;
 import com.example.library.dto.AuthorFullDto;
 import com.example.library.dto.BookDto;
 import com.example.library.dto.BookFullDto;
-import com.example.library.service.AuthorsService;
+import com.example.library.model.Author;
+import com.example.library.service.AuthorService;
+
 import com.example.library.service.BookService;
 
 @RestController
@@ -31,7 +33,7 @@ import com.example.library.service.BookService;
 @CrossOrigin(origins="*")
 public class LibraryRestController {
 	@Autowired
-	AuthorsService authorService;
+	AuthorService authorService;
 	@Autowired
 	BookService bookService;
     @Autowired
@@ -64,11 +66,19 @@ public class LibraryRestController {
 	 * add author
 	 */
 	@PostMapping("/authors")
-	public ResponseEntity <AuthorFullDto> addAuthor(@RequestBody @Valid AuthorFullDto author) {
+	/*public ResponseEntity <AuthorFullDto> addAuthor(@RequestBody @Valid AuthorFullDto author) {
 		//return ResponseEntity.ok(modelMapper.map(authorService.save(author.toAuthor()), AuthorFullDto.class));
+		//Author auth = authorService.save(author.toAuthor());
+		//AuthorFullDto addedauthor = modelMapper.map(author, AuthorFullDto.class);
 		AuthorFullDto addedauthor = modelMapper.map(authorService.save(author.toAuthor()), AuthorFullDto.class);
 		//System.out.println(addedauthor.getBooks());
 		return ResponseEntity.ok(addedauthor);
+	}*/
+	public ResponseEntity <Author> addAuthor(@RequestBody AuthorFullDto author){
+		Author auth = authorService.save(author.toAuthor());
+		//System.out.println(auth.getAge());
+		AuthorFullDto addedauthor = modelMapper.map(auth, AuthorFullDto.class);
+		return ResponseEntity.ok(auth);
 	}
 	/*
 	 * delete author
@@ -76,7 +86,7 @@ public class LibraryRestController {
 	@DeleteMapping("/authors/{id}") 
 	public ResponseEntity <String> deleteAuthorById(@PathVariable Long id){
 		authorService.deleteById(id);
-		return ResponseEntity.status(HttpStatus.OK).body("OK");
+		return ResponseEntity.status(HttpStatus.OK).body("deleted");
 	}
 	/*
 	 * delete book from author
@@ -84,7 +94,7 @@ public class LibraryRestController {
 	@DeleteMapping("/books/{id}")
 	public ResponseEntity <String> deleteBookById(@PathVariable Long id){
 		bookService.deleteById(id);
-		return ResponseEntity.ok("deleted!");
+		return ResponseEntity.status(HttpStatus.OK).body("deleted");
 	}
 	/*
 	 * add book to author

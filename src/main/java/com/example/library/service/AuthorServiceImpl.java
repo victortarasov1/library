@@ -10,7 +10,7 @@ import com.example.library.model.Author;
 import com.example.library.model.Book;
 import com.example.library.repository.AuthorRepository;
 @Service
-public class AuthorServiceImpl implements AuthorsService {
+public class AuthorServiceImpl implements AuthorService {
 	@Autowired
 	AuthorRepository authorRepository;
 	@Override

@@ -7,12 +7,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.example.library.dto.AuthorFullDto;
 import com.example.library.model.Author;
-import com.example.library.service.AuthorsService;
+import com.example.library.service.AuthorService;
+
 
 
 public class CheckIfAuthorIsUniqueValidationImpl implements ConstraintValidator <CheckIfAuthorIsUniqueValidation, AuthorFullDto>{
 	@Autowired
-	AuthorsService authorService; 
+	AuthorService authorService; 
 	@Override
 	public boolean isValid(AuthorFullDto value, ConstraintValidatorContext context) {
 		try {

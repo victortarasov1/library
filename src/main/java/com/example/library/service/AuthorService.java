@@ -5,7 +5,7 @@ import java.util.List;
 import com.example.library.model.Author;
 import com.example.library.model.Book;
 
-public interface AuthorsService {
+public interface AuthorService {
 	public List<Author> findAll();
 	public Author findById(Long id);
 	public void changeAuthor(Author author);
