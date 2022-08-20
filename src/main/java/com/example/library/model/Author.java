@@ -1,6 +1,7 @@
 package com.example.library.model;
 
 import java.util.List;
+import java.util.Objects;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -27,6 +28,23 @@ public class Author {
 	 */
 	@OneToMany(mappedBy = "author", cascade = CascadeType.ALL, /*orphanRemoval = true,*/fetch = FetchType.LAZY )
 	private List <Book> books;
+	
+	@Override
+	public int hashCode() {
+		return Objects.hash(age, books, id, name, secondName);
+	}
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Author other = (Author) obj;
+		return age == other.age && Objects.equals(books, other.books) && Objects.equals(id, other.id)
+				&& Objects.equals(name, other.name) && Objects.equals(secondName, other.secondName);
+	}
 	public Long getId() {
 		return id;
 	}

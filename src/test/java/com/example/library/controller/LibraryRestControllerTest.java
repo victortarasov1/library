@@ -20,6 +20,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -90,6 +91,7 @@ public class LibraryRestControllerTest {
 		author.setSecondName("second name");
 		AuthorFullDto dto = new AuthorFullDto();
 		dto.setId(author.getId());
+		dto.setAge(author.getAge());
 		dto.setName(author.getName());
 		dto.setSecondName(author.getSecondName());
 		Mockito.when(authorService.findById((long) 1)).thenReturn(author);
@@ -99,7 +101,8 @@ public class LibraryRestControllerTest {
 			.andExpect(content().contentType(MediaType.APPLICATION_JSON))
 			.andExpect(jsonPath("id", equalTo(1)))
 			.andExpect(jsonPath("name", equalTo("name")))
-			.andExpect(jsonPath("secondName", equalTo("second name")));
+			.andExpect(jsonPath("secondName", equalTo("second name")))
+			.andExpect(jsonPath("age", equalTo(30)));
 	}
 	
 	@Test
@@ -121,7 +124,7 @@ public class LibraryRestControllerTest {
 							.andExpect(jsonPath("secondName", equalTo("second name")));
 	}
 	
-	/*@Test
+	@Test
 	public void addAuthorTest() throws Exception {
 		Author author = new Author();
 		author.setId((long) 1);
@@ -135,17 +138,17 @@ public class LibraryRestControllerTest {
 		dto.setSecondName(author.getSecondName());
 		Mockito.when(authorService.save(dto.toAuthor())).thenReturn(author);
 		Mockito.when(modelMapper.map(author, AuthorFullDto.class)).thenReturn(dto);
-		System.out.println(authorService.save(dto.toAuthor()).getAge());
 		this.mockMvc.perform(post("/library/authors")
 	            .contentType(MediaType.APPLICATION_JSON)
 	            .content(objectMapper.writeValueAsString(dto)))
 				.andExpect(status().isOk())
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON))
-				.andDo(print())
+				//.andDo(print())
 				.andExpect(jsonPath("id", equalTo(1)))
 				.andExpect(jsonPath("name", equalTo("name")))
 				.andExpect(jsonPath("secondName", equalTo("second name")));
-	}*/
+				
+	}
 	@Test
 	public void deleteAuthorByIdTest() throws Exception {
 		Mockito.doNothing().when(authorService).deleteById((long) 1);
@@ -167,7 +170,7 @@ public class LibraryRestControllerTest {
 			assertEquals(res.getResponse().getContentAsString(),"deleted");
 	}
 	
-	/*@Test
+	@Test
 	public void addBookTitleTest() throws Exception {
 		Author author = new Author();
 		author.setId((long) 1);
@@ -181,19 +184,19 @@ public class LibraryRestControllerTest {
 		BookDto book = new BookDto();
 		book.setId((long) 1);
 		book.setTitle("title");
-		Mockito.when(authorsService.addTitle((long)1, book.toBook())).thenReturn(author);
+		Mockito.when(authorService.addTitle((long)1, book.toBook())).thenReturn(author);
 		Mockito.when(modelMapper.map(author, AuthorFullDto.class)).thenReturn(dto);
 		this.mockMvc.perform(post("/library/authors/1")
 	            .contentType(MediaType.APPLICATION_JSON)
-	            	.content(objectMapper.writeValueAsString(book)))
-						.andExpect(status().isOk())
-							.andExpect(content().contentType(MediaType.APPLICATION_JSON))
-							.andDo(print())
-								.andExpect(jsonPath("id", equalTo(1)))
-									.andExpect(jsonPath("name", equalTo("name")))
-										.andExpect(jsonPath("secondName", equalTo("second name")));
+	            .content(objectMapper.writeValueAsString(book)))
+				.andExpect(status().isOk())
+				.andExpect(content().contentType(MediaType.APPLICATION_JSON))
+				.andDo(print())
+				.andExpect(jsonPath("id", equalTo(1)))
+				.andExpect(jsonPath("name", equalTo("name")))
+				.andExpect(jsonPath("secondName", equalTo("second name")));
 		
-	}*/
+	}
 	
 	@Test
 	public void getBookByIdTest() throws Exception {

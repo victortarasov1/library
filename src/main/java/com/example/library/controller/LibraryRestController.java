@@ -66,20 +66,11 @@ public class LibraryRestController {
 	 * add author
 	 */
 	@PostMapping("/authors")
-	/*public ResponseEntity <AuthorFullDto> addAuthor(@RequestBody @Valid AuthorFullDto author) {
-		//return ResponseEntity.ok(modelMapper.map(authorService.save(author.toAuthor()), AuthorFullDto.class));
-		//Author auth = authorService.save(author.toAuthor());
-		//AuthorFullDto addedauthor = modelMapper.map(author, AuthorFullDto.class);
+	public ResponseEntity <AuthorFullDto> addAuthor(@RequestBody @Valid AuthorFullDto author) {	
 		AuthorFullDto addedauthor = modelMapper.map(authorService.save(author.toAuthor()), AuthorFullDto.class);
-		//System.out.println(addedauthor.getBooks());
 		return ResponseEntity.ok(addedauthor);
-	}*/
-	public ResponseEntity <Author> addAuthor(@RequestBody AuthorFullDto author){
-		Author auth = authorService.save(author.toAuthor());
-		//System.out.println(auth.getAge());
-		AuthorFullDto addedauthor = modelMapper.map(auth, AuthorFullDto.class);
-		return ResponseEntity.ok(auth);
 	}
+	
 	/*
 	 * delete author
 	 */
