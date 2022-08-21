@@ -1,6 +1,7 @@
 package com.example.library.dto;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import com.example.library.model.Book;
@@ -38,5 +39,11 @@ public class BookFullDto extends BookDto {
 	public void setAuthor(AuthorDto author) {
 		this.author = author;
 	}
+	/*public BookFullDto(@NotNull(message = "title must be setted!") String title) {
+		super( title);
+	}
+	public BookFullDto() {
+		super();
+	}*/
 	
 }

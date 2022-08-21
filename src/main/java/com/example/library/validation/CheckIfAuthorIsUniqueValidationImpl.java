@@ -13,7 +13,7 @@ import com.example.library.service.AuthorService;
 
 public class CheckIfAuthorIsUniqueValidationImpl implements ConstraintValidator <CheckIfAuthorIsUniqueValidation, AuthorFullDto>{
 	@Autowired
-	AuthorService authorService; 
+	private AuthorService authorService; 
 	@Override
 	public boolean isValid(AuthorFullDto value, ConstraintValidatorContext context) {
 		try {

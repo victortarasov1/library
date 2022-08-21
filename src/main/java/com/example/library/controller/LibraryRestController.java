@@ -23,7 +23,6 @@ import com.example.library.dto.AuthorDto;
 import com.example.library.dto.AuthorFullDto;
 import com.example.library.dto.BookDto;
 import com.example.library.dto.BookFullDto;
-import com.example.library.model.Author;
 import com.example.library.service.AuthorService;
 
 import com.example.library.service.BookService;
@@ -33,9 +32,9 @@ import com.example.library.service.BookService;
 @CrossOrigin(origins="*")
 public class LibraryRestController {
 	@Autowired
-	AuthorService authorService;
+	private AuthorService authorService;
 	@Autowired
-	BookService bookService;
+	private BookService bookService;
     @Autowired
     private ModelMapper modelMapper;
 	/*

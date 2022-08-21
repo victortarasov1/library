@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 import javax.validation.Valid;
 import javax.validation.constraints.Max;
 
@@ -43,4 +44,13 @@ public class AuthorFullDto extends AuthorDto {
 	public void setBooks(List <BookDto> books) {
 		this.books = books;
 	}
+	/*public AuthorFullDto(@NotNull(message = "name must be setted") String name,
+			@NotNull(message = "second name must be setted") String secondName, int age) {
+		super(name, secondName);
+		this.age = age;
+	}
+	public AuthorFullDto() {
+		super();
+	}*/
+	
 }

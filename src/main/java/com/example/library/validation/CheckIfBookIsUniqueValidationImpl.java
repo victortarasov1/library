@@ -12,7 +12,7 @@ import com.example.library.service.BookService;
 @Component
 public class CheckIfBookIsUniqueValidationImpl implements ConstraintValidator <CheckIfBookIsUniqueValidation, BookDto > {
 	@Autowired
-	BookService bookService;
+	private BookService bookService;
 	@Override
 	public boolean isValid(BookDto value, ConstraintValidatorContext context) {
 		try {

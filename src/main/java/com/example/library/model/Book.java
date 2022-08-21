@@ -65,4 +65,12 @@ public class Book {
 				&& Objects.equals(id, other.id) && Objects.equals(title, other.title);
 	}
 	
+	/*public Book () {}
+	public Book(String title, String description, Author author) {
+		this.title = title;
+		this.description = description;
+		this.author = author;
+	}
+	*/
+	
 }

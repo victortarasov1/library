@@ -38,5 +38,10 @@ public class AuthorDto {
 	public void setId(Long id) {
 		this.id = id;
 	}
-	
+	public AuthorDto( @NotNull(message = "name must be setted") String name,
+			@NotNull(message = "second name must be setted") String secondName) {
+		this.name = name;
+		this.secondName = secondName;
+	}
+	public AuthorDto() {}
 }

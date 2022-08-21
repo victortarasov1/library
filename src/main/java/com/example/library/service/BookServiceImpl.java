@@ -13,9 +13,13 @@ import com.example.library.repository.BookRepository;
 @Service
 public class BookServiceImpl implements BookService {
 	@Autowired
-	BookRepository bookRepository;
+	private BookRepository bookRepository;
 	@Autowired
-	AuthorService authorService;
+	private AuthorService authorService;
+	public BookServiceImpl(BookRepository bookRepository, AuthorService authorService) {
+		this.bookRepository = bookRepository;
+		this.authorService = authorService;
+	}
 	@Override
 	public List<Book> findAll() {	
 		return bookRepository.findAll();
@@ -56,12 +60,12 @@ public class BookServiceImpl implements BookService {
 		bookRepository.save(changedBook);
 		
 	}
-	@Override
+	/*@Override
 	public void changeAuthor(Long id, Author author) {
 		Book book = findById(id);
 		book.setAuthor(author);
 		save(book);
-	}
+	}*/
 	@Override
 	public Book findEquals(Book book) {
 		List <Book> books = bookRepository.findAll();

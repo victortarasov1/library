@@ -31,5 +31,8 @@ public class BookDto {
 	public void setTitle(String title) {
 		this.title = title;
 	}
-	
+	/*public BookDto(@NotNull(message = "title must be setted!") String title) {
+		this.title = title;
+	}
+	public BookDto() {}*/
 }

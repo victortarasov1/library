@@ -12,7 +12,10 @@ import com.example.library.repository.AuthorRepository;
 @Service
 public class AuthorServiceImpl implements AuthorService {
 	@Autowired
-	AuthorRepository authorRepository;
+	private AuthorRepository authorRepository;
+	public AuthorServiceImpl(AuthorRepository authorRepository) {
+		this.authorRepository = authorRepository;
+	}
 	@Override
 	public List<Author> findAll() {
 		return authorRepository.findAll();
@@ -45,9 +48,11 @@ public class AuthorServiceImpl implements AuthorService {
 	}
 	@Override
 	public Author save(Author author) {
-		Author equalsAuthor = findEquals(author);
-		authorRepository.save(equalsAuthor);
-		return authorRepository.findById(equalsAuthor.getId()).orElse(authorRepository.findAll().get(authorRepository.findAll().size()-1));
+		/*Author equalsAuthor = findEquals(author);
+		authorRepository.save(equalsAuthor);*/
+		authorRepository.save(author);
+		//return authorRepository.findById(equalsAuthor.getId()).orElse(authorRepository.findAll().get(authorRepository.findAll().size()-1));
+		return authorRepository.findById(author.getId()).orElse(authorRepository.findAll().get(authorRepository.findAll().size()-1));
 	}
 	@Override
 	public Author addTitle(Long id, Book book) {
