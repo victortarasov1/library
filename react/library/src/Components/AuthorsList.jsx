@@ -3,11 +3,16 @@ import AuthorItem from './AuthorItem';
 import FullAuthorForm from './FullAuthorForm';
 import AuthorService from '../API/AuthorService';
 import {Button, Modal} from 'react-bootstrap';
-
+import Loader from '../UI/Loader/Loader';
 const AuthorsList = () => {
+  const [authorLoading, setAuthorLoading] = useState(false);
   const [authors, setAuthors] = useState([]);
   useEffect ( () => {
-    fetchAuthors();
+    setAuthorLoading(true);
+    setTimeout ( () => {
+        fetchAuthors();
+        setAuthorLoading(false);
+      }, 1000);
   }, [])
   async function fetchAuthors () {
     const response = await AuthorService.getAll();
@@ -27,7 +32,12 @@ const AuthorsList = () => {
   const [modal, setModal] = useState(false)
   return (
     <div className = "list">
-
+      {authorLoading?(
+        <div style = {{display: 'flex', justifyContent: 'center'}}>
+            <Loader />
+          </div>
+      ):(
+      <div>
       <div>
         {authors.length ?(
             <div>
@@ -47,6 +57,8 @@ const AuthorsList = () => {
         <Button onClick = {() => setModal(true)}> add new Author </Button>
         <Modal className = "modal" show = {modal} onHide = {setModal}> <FullAuthorForm createOrUpdate = {addAuthor}/> </Modal>
       </div>
+      </div>
+    )}
     </div>
   )
 };

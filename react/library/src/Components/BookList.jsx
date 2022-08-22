@@ -1,17 +1,23 @@
 import BookItem from './BookItem';
 import BookService from '../API/BookService';
 import FullBookForm from './FullBookForm';
+import Loader from '../UI/Loader/Loader';
 import React, {useState, useEffect} from 'react';
 import {Modal, Button} from 'react-bootstrap';
 const BookList = () => {
   const [books, setBooks] = useState([]);
   const [modal, setModal] = useState(false);
+  const [booksLoading, setBooksLoading] = useState(false);
   const addBook = (book) =>{
     setBooks([...books, book]);
     setModal(false);
   }
   useEffect ( () => {
-    fetchBooks();
+    setBooksLoading(true);
+    setTimeout ( () => {
+        fetchBooks();
+        setBooksLoading(false);
+      }, 1000);
   },[]);
   async function fetchBooks () {
     const response = await BookService.findAll();
@@ -26,6 +32,12 @@ const BookList = () => {
   }
   return (
     <div className = "list">
+      {booksLoading ?(
+        <div style = {{display: 'flex', justifyContent: 'center'}}>
+            <Loader />
+          </div>
+      ):(
+      <div>
       {books.length? (
         <div>
           { books.map( book =>
@@ -41,6 +53,8 @@ const BookList = () => {
         <Button onClick = {() => setModal(true)}> add </Button>
         <Modal show = {modal} onHide = {setModal}> <FullBookForm createOrUpdate = {addBook}/> </Modal>
       </div>
+      </div>)
+    }
     </div>
   )
 };
