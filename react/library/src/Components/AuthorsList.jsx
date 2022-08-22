@@ -1,9 +1,18 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import AuthorItem from './AuthorItem';
 import FullAuthorForm from './FullAuthorForm';
 import AuthorService from '../API/AuthorService';
 import {Button, Modal} from 'react-bootstrap';
-const AuthorsList = ({authors,setAuthors}) => {
+
+const AuthorsList = () => {
+  const [authors, setAuthors] = useState([]);
+  useEffect ( () => {
+    fetchAuthors();
+  }, [])
+  async function fetchAuthors () {
+    const response = await AuthorService.getAll();
+    setAuthors(response);
+  }
   const addAuthor = (author) =>{
     setAuthors([...authors, author]);
     setModal(false);
@@ -18,6 +27,7 @@ const AuthorsList = ({authors,setAuthors}) => {
   const [modal, setModal] = useState(false)
   return (
     <div className = "list">
+
       <div>
         {authors.length ?(
             <div>

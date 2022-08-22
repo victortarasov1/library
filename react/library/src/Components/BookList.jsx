@@ -1,13 +1,21 @@
 import BookItem from './BookItem';
 import BookService from '../API/BookService';
 import FullBookForm from './FullBookForm';
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {Modal, Button} from 'react-bootstrap';
-const BookList = ({books, setBooks}) => {
+const BookList = () => {
+  const [books, setBooks] = useState([]);
   const [modal, setModal] = useState(false);
   const addBook = (book) =>{
     setBooks([...books, book]);
     setModal(false);
+  }
+  useEffect ( () => {
+    fetchBooks();
+  },[]);
+  async function fetchBooks () {
+    const response = await BookService.findAll();
+    setBooks(response);
   }
   const deleteBook = (book) => {
     BookService.deleteById(book.id);

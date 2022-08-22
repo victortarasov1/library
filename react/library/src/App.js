@@ -2,8 +2,8 @@ import './App.css';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {Routes, Route} from 'react-router-dom';
-import AuthorsPage from './Components/AuthorsPage';
-import BooksPage from './Components/BooksPage';
+import AuthorsList from './Components/AuthorsList';
+import BooksList from './Components/BookList';
 function App() {
   return (
     <div>
@@ -12,9 +12,9 @@ function App() {
         <a href="/books"> books </a>
       </header>
       <Routes>
-        <Route path = "/authors" element = { <AuthorsPage />} />
-        <Route path = "/books" element = { <BooksPage />} />
-        <Route path = "/" element = { <BooksPage />} />
+        <Route path = "/authors" element = { <AuthorsList />} />
+        <Route path = "/books" element = { <BooksList />} />
+        <Route path = "/" element = { <BooksList />} />
       </Routes>
     </div>
   );
