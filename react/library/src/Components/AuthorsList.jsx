@@ -4,6 +4,7 @@ import FullAuthorForm from './FullAuthorForm';
 import AuthorService from '../API/AuthorService';
 import {Button, Modal} from 'react-bootstrap';
 import Loader from '../UI/Loader/Loader';
+import {CSSTransition,TransitionGroup} from 'react-transition-group';
 const AuthorsList = () => {
   const [authorLoading, setAuthorLoading] = useState(false);
   const [authors, setAuthors] = useState([]);
@@ -13,23 +14,23 @@ const AuthorsList = () => {
         fetchAuthors();
         setAuthorLoading(false);
       }, 1000);
-  }, [])
+  }, []);
   async function fetchAuthors () {
     const response = await AuthorService.getAll();
     setAuthors(response);
-  }
+  };
   const addAuthor = (author) =>{
     setAuthors([...authors, author]);
     setModal(false);
-  }
+  };
   const deleteAuthor = (author) => {
     AuthorService.deleteById(author.id);
     setAuthors(authors.filter(a => a.id !== author.id));
-  }
+  };
   const changeAuthor = (author) => {
     setAuthors([...authors.filter(a => a.id !== author.id), author]);
-  }
-  const [modal, setModal] = useState(false)
+  };
+  const [modal, setModal] = useState(false);
   return (
     <div className = "list">
       {authorLoading?(
@@ -40,13 +41,13 @@ const AuthorsList = () => {
       <div>
       <div>
         {authors.length ?(
-            <div>
+            <TransitionGroup>
               {authors.map( author =>
-                <div>
+                <CSSTransition key = {author.id} timeout = {1000} classNames = "element" >
                   <AuthorItem author = {author} remove = {deleteAuthor} change = {changeAuthor} />
-                </div>
+                </CSSTransition>
               )}
-            </div>
+            </TransitionGroup>
           ): (
             <h1> Authors not found! </h1>
           )

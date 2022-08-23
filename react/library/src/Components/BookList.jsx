@@ -3,6 +3,7 @@ import BookService from '../API/BookService';
 import FullBookForm from './FullBookForm';
 import Loader from '../UI/Loader/Loader';
 import React, {useState, useEffect} from 'react';
+import {CSSTransition,TransitionGroup} from 'react-transition-group';
 import {Modal, Button} from 'react-bootstrap';
 const BookList = () => {
   const [books, setBooks] = useState([]);
@@ -39,13 +40,13 @@ const BookList = () => {
       ):(
       <div>
       {books.length? (
-        <div>
+          <TransitionGroup>
           { books.map( book =>
-            <div>
+            <CSSTransition key = {book.id} timeout = {1000} classNames = "element" >
               <BookItem book = {book} remove = {deleteBook} update = {changeBook}/>
-            </div>
+              </CSSTransition>
           )}
-        </div>
+        </TransitionGroup>
       ):(
         <h1> Books not found! </h1>
       )}

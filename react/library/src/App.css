@@ -70,3 +70,17 @@
     transform: rotate(360deg);
   }
 }
+.element-enter {
+  opacity: 0;
+}
+.element-enter-active {
+  opacity: 1;
+  transition: opacity 500ms ease-in;
+}
+.element-exit {
+  opacity: 1;
+}
+.element-exit-active {
+  opacity: 0;
+  transition: opacity 500ms ease-in;
+}
