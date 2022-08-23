@@ -2,14 +2,17 @@ import {Button, Modal} from 'react-bootstrap';
 import React, {useState} from 'react';
 import BookService from '../API/BookService';
 import FullBookForm from './FullBookForm';
+import Loader from '../UI/Loader/Loader';
 const BookItem = ({book, remove, update}) =>{
   const[modal, setModal] = useState(false);
   const [open, setOpen] = useState(false);
   const [fullBook, setFullBook] = useState();
+  const [fullBookLoading, setFullBookLoading] = useState(false);
   async function fetchBookWithAuthors (){
+    setFullBookLoading(true);
     const response = await BookService.getBookById(book.id);
     setFullBook(response);
-    //setBooks(response.books);
+    setFullBookLoading(false);
     setOpen(true);
   };
   const changeBook = (book) =>{
@@ -19,6 +22,11 @@ const BookItem = ({book, remove, update}) =>{
   return(
     <div className = "item">
       <h1> {book.title} </h1>
+      {fullBookLoading ? (
+        <div style = {{display: 'flex', justifyContent: 'center'}}>
+            <Loader />
+          </div>
+      ):(
       <div>
         {open?(
           <div>
@@ -40,6 +48,7 @@ const BookItem = ({book, remove, update}) =>{
           </div>
         )}
       </div>
+      )}
     </div>
   )
 };
