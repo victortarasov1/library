@@ -24,7 +24,7 @@ public class BookFullDto extends BookDto {
 		book.setDescription(description);
 		//book.setTitle(title);
 		book.setTitle(getTitle());
-		book.setAuthor(author.toAuthor());
+		//book.setAuthor(author.toAuthor());
 		return book;
 	}
 	public String getDescription() {

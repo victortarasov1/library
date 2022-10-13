@@ -8,7 +8,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import java.util.Arrays;
 
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -17,16 +16,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import com.example.library.dto.AuthorFullDto;
 import com.example.library.exception.AuthorNotFoundException;
 import com.example.library.exception.BookNotFoundException;
 import com.example.library.model.Author;
-import com.example.library.service.AuthorService;
-import com.example.library.service.BookService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @WebMvcTest

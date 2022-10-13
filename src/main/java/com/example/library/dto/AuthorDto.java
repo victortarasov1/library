@@ -3,16 +3,20 @@ package com.example.library.dto;
 import javax.validation.constraints.NotNull;
 
 import com.example.library.model.Author;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-/*
- * Author without  age and list of books
- */
+@Getter @Setter
+@NoArgsConstructor @AllArgsConstructor
 public class AuthorDto {
 	private Long id;
 	@NotNull(message = "name must be setted")
 	private String name;
 	@NotNull(message = "second name must be setted")
 	private String secondName;
+	private int age;
 	public Author toAuthor() {
 		Author author = new Author();
 		author.setName(name);
@@ -20,28 +24,5 @@ public class AuthorDto {
 		author.setId(id);
 		return author;
 	}
-	public String getName() {
-		return name;
-	}
-	public void setName(String name) {
-		this.name = name;
-	}
-	public String getSecondName() {
-		return secondName;
-	}
-	public void setSecondName(String secondName) {
-		this.secondName = secondName;
-	}
-	public Long getId() {
-		return id;
-	}
-	public void setId(Long id) {
-		this.id = id;
-	}
-	public AuthorDto( @NotNull(message = "name must be setted") String name,
-			@NotNull(message = "second name must be setted") String secondName) {
-		this.name = name;
-		this.secondName = secondName;
-	}
-	public AuthorDto() {}
+
 }

@@ -1,6 +1,5 @@
 package com.example.library.controller;
 
-import org.apache.catalina.mapper.Mapper;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.modelmapper.ModelMapper;
@@ -20,9 +19,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.hamcrest.Matchers.hasSize;
@@ -34,8 +31,6 @@ import com.example.library.dto.BookDto;
 import com.example.library.dto.BookFullDto;
 import com.example.library.model.Author;
 import com.example.library.model.Book;
-import com.example.library.service.AuthorService;
-import com.example.library.service.BookService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import static org.hamcrest.Matchers.equalTo;
