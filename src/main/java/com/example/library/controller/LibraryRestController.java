@@ -11,6 +11,7 @@ import com.example.library.repository.AuthorRepository;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -65,14 +66,22 @@ public class LibraryRestController {
         var author = dto.toAuthor();
         return ResponseEntity.ok(modelMapper.map(authorRepository.save(author), AuthorDto.class));
     }
-//
-//    @DeleteMapping("/authors/{id}")
-//    public ResponseEntity<String> deleteAuthorById(@PathVariable Long id) {
-//        var author = authorRepository.findAuthorByIdAndAuthorActuality(id, AuthorActuality.ACTIVE).orElseThrow(()-> new AuthorNotFoundException(id));
-//        author.setAuthorActuality(AuthorActuality.REMOVED);
-//        authorRepository.save(author);
-//        return ResponseEntity.status(HttpStatus.OK).body("deleted");
-//    }
+
+    @DeleteMapping("/authors/{id}")
+    public ResponseEntity<String> deleteAuthorById(@PathVariable Long id) {
+        var author = authorRepository.findAuthorByIdAndAuthorActuality(id, AuthorActuality.ACTIVE).orElseThrow(()-> new AuthorNotFoundException(id));
+        author.setAuthorActuality(AuthorActuality.REMOVED);
+        authorRepository.save(author);
+        return ResponseEntity.status(HttpStatus.OK).body("deleted");
+    }
+    @PostMapping("/authors/{id}")
+    public ResponseEntity<BookDto> addBook(@PathVariable Long id,@RequestBody  @Valid BookDto dto){
+        var author  = authorRepository.findAuthorByIdAndAuthorActuality(id, AuthorActuality.ACTIVE).orElseThrow(() -> new AuthorNotFoundException(id));
+        author.addBook(dto.toBook());
+        var a = authorRepository.save(author);
+        var books = authorRepository.save(author).getBooks();
+        return ResponseEntity.ok(modelMapper.map(books.get(books.size() -1), BookDto.class));
+    }
 //
 //
 //    @DeleteMapping("/books/{id}")

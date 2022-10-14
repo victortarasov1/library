@@ -20,8 +20,6 @@ public class Book {
 	private Long id;
 	private String title;
 	private String description;
-	@ManyToMany
+	@ManyToMany(mappedBy = "books")
 	List<Author> authors;
-
-
 }

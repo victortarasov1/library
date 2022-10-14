@@ -1,9 +1,11 @@
 package com.example.library.model;
 
 
+import com.example.library.dto.BookDto;
 import lombok.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -28,7 +30,13 @@ public class Author {
     /*
      * "cascade = CascadeType.ALL" - if removes author, his books will be removed too
      */
-    @ManyToMany(mappedBy = "authors")
+    @ManyToMany(cascade = CascadeType.ALL)
     private List<Book> books;
 
+    public void addBook(Book book) {
+        if (books == null){
+            books = new ArrayList<>();
+        }
+        books.add(book);
+    }
 }
