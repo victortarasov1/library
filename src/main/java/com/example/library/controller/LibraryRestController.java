@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.library.dto.AuthorDto;
 import com.example.library.dto.BookDto;
+
 @RestController
 @RequestMapping("/library")
 @CrossOrigin(origins = "*")
@@ -99,10 +100,17 @@ public class LibraryRestController {
         authorRepository.save(author);
         return ResponseEntity.ok("deleted!");
     }
+
     @GetMapping("/books")
-    public ResponseEntity<List<BookDto>> getBooks(){
+    public ResponseEntity<List<BookDto>> getBooks() {
         var books = bookRepository.findAll();
-        books = books.stream().filter(book -> book.getAuthors() != null).toList();
+        books = books.stream().filter(book -> book.getAuthors().size() != 0).toList();
         return ResponseEntity.ok(books.stream().map(book -> modelMapper.map(book, BookDto.class)).toList());
+    }
+
+    @GetMapping("/books/{id}")
+    public ResponseEntity<List<AuthorDto>> getAuthors(@PathVariable Long id) {
+        var book = bookRepository.findById(id).orElseThrow(() -> new BookNotFoundException(id));
+        return ResponseEntity.ok(book.getAuthors().stream().map(author -> modelMapper.map(author, AuthorDto.class)).toList());
     }
 }
