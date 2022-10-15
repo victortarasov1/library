@@ -26,7 +26,7 @@ public class AuthorDto {
 		var author = new Author();
 		author.setName(name);
 		author.setSecondName(secondName);
-		author.setId(id);
+		author.setAge(age);
 		author.setActuality(Actuality.ACTIVE);
 		return author;
 	}

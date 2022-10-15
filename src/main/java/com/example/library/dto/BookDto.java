@@ -22,8 +22,8 @@ public class BookDto {
 	private String description;
 	public Book toBook() {
 		Book book = new Book();
-		book.setId(id);
 		book.setTitle(title);
+		book.setDescription(description);
 		return book;
 	}
 

@@ -79,7 +79,7 @@ public class LibraryRestController {
     public ResponseEntity<BookDto> addBook(@PathVariable Long id, @RequestBody @Valid BookDto dto) {
         var author = authorRepository.findAuthorByIdAndActuality(id, Actuality.ACTIVE).orElseThrow(() -> new AuthorNotFoundException(id));
         author.addBook(dto.toBook());
-        var a = authorRepository.save(author);
+        authorRepository.save(author);
         var books = authorRepository.save(author).getBooks();
         return ResponseEntity.ok(modelMapper.map(books.get(books.size() - 1), BookDto.class));
     }
