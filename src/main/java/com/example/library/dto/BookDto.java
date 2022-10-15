@@ -8,6 +8,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.Objects;
+
 /*
  * book only with title
  */
@@ -27,4 +29,16 @@ public class BookDto {
 		return book;
 	}
 
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		BookDto bookDto = (BookDto) o;
+		return Objects.equals(title, bookDto.title) && Objects.equals(description, bookDto.description);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(title, description);
+	}
 }
