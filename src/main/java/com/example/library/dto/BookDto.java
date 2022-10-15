@@ -3,7 +3,6 @@ package com.example.library.dto;
 import javax.validation.constraints.NotNull;
 
 import com.example.library.model.Book;
-import com.example.library.validation.CheckIfBookIsUniqueValidation;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,7 +11,6 @@ import lombok.Setter;
 /*
  * book only with title
  */
-@CheckIfBookIsUniqueValidation
 @Getter
 @Setter
 @AllArgsConstructor
