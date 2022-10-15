@@ -7,9 +7,9 @@ import javax.validation.Valid;
 import com.example.library.exception.AuthorNotFoundException;
 import com.example.library.exception.BookNotFoundException;
 import com.example.library.model.Actuality;
-import com.example.library.model.Book;
 import com.example.library.repository.AuthorRepository;
 import com.example.library.repository.BookRepository;
+import com.example.library.service.BookService;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
@@ -35,7 +35,7 @@ public class LibraryRestController {
     private ModelMapper modelMapper;
     private AuthorRepository authorRepository;
     private BookRepository bookRepository;
-
+    private BookService bookService;
     @GetMapping("/authors")
     public ResponseEntity<List<AuthorDto>> findAll() {
         var authors = authorRepository.findAllByActuality(Actuality.ACTIVE);
@@ -78,8 +78,10 @@ public class LibraryRestController {
     @PostMapping("/authors/{id}")
     public ResponseEntity<BookDto> addBook(@PathVariable Long id, @RequestBody @Valid BookDto dto) {
         var author = authorRepository.findAuthorByIdAndActuality(id, Actuality.ACTIVE).orElseThrow(() -> new AuthorNotFoundException(id));
-        author.addBook(dto.toBook());
-        authorRepository.save(author);
+        bookService.checkIfAnotherAuthorsHaveThisBook(dto);
+        var book = dto.toBook();
+        book.setId(dto.getId());
+        author.addBook(book);
         var books = authorRepository.save(author).getBooks();
         return ResponseEntity.ok(modelMapper.map(books.get(books.size() - 1), BookDto.class));
     }
@@ -89,6 +91,7 @@ public class LibraryRestController {
         var book = bookRepository.findById(dto.getId()).orElseThrow(() -> new BookNotFoundException(dto.getId()));
         book.setDescription(dto.getDescription());
         book.setTitle(dto.getTitle());
+        bookService.checkIfAnotherAuthorsHaveThisBook(dto);
         return ResponseEntity.ok(modelMapper.map(bookRepository.save(book), BookDto.class));
     }
 

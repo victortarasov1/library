@@ -5,6 +5,7 @@ import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import javax.persistence.*;
 
@@ -31,9 +32,11 @@ public class Author {
     private List<Book> books;
 
     public void addBook(Book book) {
-        if (books == null){
+
+        if (books == null) {
             books = new ArrayList<>();
         }
+       
         books.add(book);
     }
 
