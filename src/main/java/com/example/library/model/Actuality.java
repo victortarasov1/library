@@ -1,6 +1,6 @@
 package com.example.library.model;
 
-public enum AuthorActuality {
+public enum Actuality {
     ACTIVE,
     REMOVED
 }

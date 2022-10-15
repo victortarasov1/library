@@ -1,17 +1,18 @@
 package com.example.library.controller;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
 import com.example.library.exception.AuthorNotFoundException;
-import com.example.library.model.AuthorActuality;
+import com.example.library.exception.BookNotFoundException;
+import com.example.library.model.Actuality;
+import com.example.library.model.Book;
 import com.example.library.repository.AuthorRepository;
+import com.example.library.repository.BookRepository;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -24,10 +25,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.library.dto.AuthorDto;
-import com.example.library.dto.AuthorFullDto;
 import com.example.library.dto.BookDto;
-import com.example.library.dto.BookFullDto;
-
 @RestController
 @RequestMapping("/library")
 @CrossOrigin(origins = "*")
@@ -35,24 +33,25 @@ import com.example.library.dto.BookFullDto;
 public class LibraryRestController {
     private ModelMapper modelMapper;
     private AuthorRepository authorRepository;
+    private BookRepository bookRepository;
 
     @GetMapping("/authors")
     public ResponseEntity<List<AuthorDto>> findAll() {
-        var authors = authorRepository.findAllByAuthorActuality(AuthorActuality.ACTIVE);
+        var authors = authorRepository.findAllByActuality(Actuality.ACTIVE);
         return ResponseEntity.ok(authors.stream().map(author -> modelMapper.map(author, AuthorDto.class)).toList());
     }
 
 
     @GetMapping("/authors/{id}")
     public ResponseEntity<List<BookDto>> findById(@PathVariable Long id) {
-        var author = authorRepository.findAuthorByIdAndAuthorActuality(id, AuthorActuality.ACTIVE).orElseThrow(()-> new AuthorNotFoundException(id));
-        return ResponseEntity.ok( author.getBooks().stream().map(book -> modelMapper.map(book, BookDto.class)).toList());
+        var author = authorRepository.findAuthorByIdAndActuality(id, Actuality.ACTIVE).orElseThrow(() -> new AuthorNotFoundException(id));
+        return ResponseEntity.ok(author.getBooks().stream().map(book -> modelMapper.map(book, BookDto.class)).toList());
     }
 
     @PatchMapping("/authors")
     public ResponseEntity<AuthorDto> changeAuthor(@RequestBody @Valid AuthorDto dto) {
-        var author = authorRepository.findAuthorByIdAndAuthorActuality(dto.getId(), AuthorActuality.ACTIVE)
-                .orElseThrow(()-> new AuthorNotFoundException(dto.getId()));
+        var author = authorRepository.findAuthorByIdAndActuality(dto.getId(), Actuality.ACTIVE)
+                .orElseThrow(() -> new AuthorNotFoundException(dto.getId()));
         author.setAge(dto.getAge());
         author.setSecondName(dto.getSecondName());
         author.setName(dto.getName());
@@ -69,65 +68,41 @@ public class LibraryRestController {
 
     @DeleteMapping("/authors/{id}")
     public ResponseEntity<String> deleteAuthorById(@PathVariable Long id) {
-        var author = authorRepository.findAuthorByIdAndAuthorActuality(id, AuthorActuality.ACTIVE).orElseThrow(()-> new AuthorNotFoundException(id));
-        author.setAuthorActuality(AuthorActuality.REMOVED);
+        var author = authorRepository.findAuthorByIdAndActuality(id, Actuality.ACTIVE).orElseThrow(() -> new AuthorNotFoundException(id));
+        author.setActuality(Actuality.REMOVED);
         authorRepository.save(author);
         return ResponseEntity.status(HttpStatus.OK).body("deleted");
     }
+
     @PostMapping("/authors/{id}")
-    public ResponseEntity<BookDto> addBook(@PathVariable Long id,@RequestBody  @Valid BookDto dto){
-        var author  = authorRepository.findAuthorByIdAndAuthorActuality(id, AuthorActuality.ACTIVE).orElseThrow(() -> new AuthorNotFoundException(id));
+    public ResponseEntity<BookDto> addBook(@PathVariable Long id, @RequestBody @Valid BookDto dto) {
+        var author = authorRepository.findAuthorByIdAndActuality(id, Actuality.ACTIVE).orElseThrow(() -> new AuthorNotFoundException(id));
         author.addBook(dto.toBook());
         var a = authorRepository.save(author);
         var books = authorRepository.save(author).getBooks();
-        return ResponseEntity.ok(modelMapper.map(books.get(books.size() -1), BookDto.class));
+        return ResponseEntity.ok(modelMapper.map(books.get(books.size() - 1), BookDto.class));
     }
-//
-//
-//    @DeleteMapping("/books/{id}")
-//    public ResponseEntity<String> deleteBookById(@PathVariable Long id) {
-//        bookService.deleteById(id);
-//        return ResponseEntity.status(HttpStatus.OK).body("deleted");
-//    }
-//
-//    /*
-//     * add book to author
-//     */
-//    @PostMapping("/authors/{id}")
-//    public ResponseEntity<AuthorFullDto> addBookTitle(@PathVariable Long id, @RequestBody @Valid BookDto book) {
-//        return ResponseEntity.ok(modelMapper.map(authorService.addTitle(id, book.toBook()), AuthorFullDto.class));
-//    }
-//
-//    /*
-//     * get book by id
-//     */
-//    @GetMapping("/books/{id}")
-//    public ResponseEntity<BookFullDto> findBookById(@PathVariable Long id) {
-//        return ResponseEntity.ok(modelMapper.map(bookService.findById(id), BookFullDto.class));
-//    }
-//
-//    /*
-//     * add book
-//     */
-//    @PostMapping("/books")
-//    public ResponseEntity<BookFullDto> addBook(@RequestBody @Valid BookFullDto book) {
-//        return ResponseEntity.ok(modelMapper.map(bookService.save(book.toBook()), BookFullDto.class));
-//    }
-//
-//    /*
-//     * change book
-//     */
-//    @PatchMapping("/books")
-//    public ResponseEntity<BookFullDto> changeBook(@RequestBody @Valid BookFullDto book) {
-//        bookService.changeBook(book.toBook());
-//        return ResponseEntity.ok(book);
-//    }
-//
-//    /*
-//     * get all book
-//     */
-//    @GetMapping("/books")
-//    public ResponseEntity<List<BookDto>> getBooks() {
-//        return ResponseEntity.ok(bookService.findAll().stream().map(book -> modelMapper.map(book, BookDto.class)).collect(Collectors.toList()));
-//    }
+
+    @PatchMapping("/books")
+    public ResponseEntity<BookDto> changeBook(@RequestBody @Valid BookDto dto) {
+        var book = bookRepository.findById(dto.getId()).orElseThrow(() -> new BookNotFoundException(dto.getId()));
+        book.setDescription(dto.getDescription());
+        book.setTitle(dto.getTitle());
+        return ResponseEntity.ok(modelMapper.map(bookRepository.save(book), BookDto.class));
+    }
+
+    @DeleteMapping("/authors/{authorsId}/books/{bookId}")
+    public ResponseEntity<String> deleteBook(@PathVariable Long authorsId, @PathVariable Long bookId) {
+        var author = authorRepository.findAuthorByIdAndActuality(authorsId, Actuality.ACTIVE).orElseThrow(() -> new AuthorNotFoundException(authorsId));
+        var book = bookRepository.findById(bookId).orElseThrow(() -> new BookNotFoundException(bookId));
+        author.removeBook(book);
+        authorRepository.save(author);
+        return ResponseEntity.ok("deleted!");
+    }
+    @GetMapping("/books")
+    public ResponseEntity<List<BookDto>> getBooks(){
+        var books = bookRepository.findAll();
+        books = books.stream().filter(book -> book.getAuthors() != null).toList();
+        return ResponseEntity.ok(books.stream().map(book -> modelMapper.map(book, BookDto.class)).toList());
+    }
 }

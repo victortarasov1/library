@@ -3,7 +3,7 @@ package com.example.library.dto;
 import javax.validation.constraints.NotNull;
 
 import com.example.library.model.Author;
-import com.example.library.model.AuthorActuality;
+import com.example.library.model.Actuality;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -23,7 +23,7 @@ public class AuthorDto {
 		author.setName(name);
 		author.setSecondName(secondName);
 		author.setId(id);
-		author.setAuthorActuality(AuthorActuality.ACTIVE);
+		author.setActuality(Actuality.ACTIVE);
 		return author;
 	}
 
