@@ -13,7 +13,7 @@ import javax.persistence.*;
 @Getter @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode
+
 public class Book {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,4 +22,17 @@ public class Book {
 	private String description;
 	@ManyToMany(mappedBy = "books")
 	List<Author> authors;
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		Book book = (Book) o;
+		return Objects.equals(title, book.title) && Objects.equals(description, book.description);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(title, description);
+	}
 }

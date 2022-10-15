@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.validation.Valid;
 
+import com.example.library.exception.AuthorContainsBookException;
 import com.example.library.exception.AuthorNotFoundException;
 import com.example.library.exception.BookNotFoundException;
 import com.example.library.model.Actuality;
@@ -76,8 +77,9 @@ public class LibraryRestController {
     }
 
     @PostMapping("/authors/{id}")
-    public ResponseEntity<BookDto> addBook(@PathVariable Long id, @RequestBody @Valid BookDto dto) {
+    public ResponseEntity<BookDto> addBook(@PathVariable Long id, @RequestBody @Valid BookDto dto) throws AuthorContainsBookException {
         var author = authorRepository.findAuthorByIdAndActuality(id, Actuality.ACTIVE).orElseThrow(() -> new AuthorNotFoundException(id));
+        bookService.checkIfAuthorAlreadyContainsBook(id, dto);
         bookService.checkIfAnotherAuthorsHaveThisBook(dto);
         var book = dto.toBook();
         book.setId(dto.getId());

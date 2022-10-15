@@ -3,6 +3,7 @@ package com.example.library.controller;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.example.library.exception.AuthorContainsBookException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -21,7 +22,7 @@ public class RestExceptionHandler {
 	/*
 	 * handle exceptions on Service - layer
 	 */
-	@ExceptionHandler({AuthorNotFoundException.class, BookNotFoundException.class})
+	@ExceptionHandler({AuthorNotFoundException.class, BookNotFoundException.class, AuthorContainsBookException.class})
     protected ResponseEntity<Object> handleEntityNotFoundEx(RuntimeException ex, WebRequest request) {
       ApiError apiError = new ApiError("entity not found exception", ex.getMessage());
       return new ResponseEntity<>(apiError, HttpStatus.NOT_FOUND);
