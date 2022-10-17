@@ -7,13 +7,13 @@ const BookForm = ({createOrupdate, book, id}) => {
   const [description, setDescription] = useState('');
   const create = (e) => {
     e.preventDefault();
-    const data = BookService.add(id, title, description).then(data => {
+    BookService.add(id, title, description).then(data => {
       validation(data);
     });
   };
   const update = (e) => {
     e.preventDefault();
-    const data = BookService.change(book.id, title, description).then(data => {
+    BookService.change(book.id, title, description).then(data => {
       validation(data);
     });
   };

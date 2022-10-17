@@ -24,9 +24,6 @@ public class LibraryConfig {
                 .constraintValidatorFactory(new SpringConstraintValidatorFactory(beanFactory))
                 .buildValidatorFactory();) {
             return validatorFactory.getValidator();
-        } catch (Exception ex) {
-            throw ex;
         }
-
     }
 }

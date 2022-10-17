@@ -8,13 +8,13 @@ const AuthorForm = ({createOrupdate, author}) => {
   const[age, setAge] = useState('');
   const create = (e) => {
     e.preventDefault();
-    const data = AuthorService.add(name, secondName, age).then(data => {
+    AuthorService.add(name, secondName, age).then(data => {
       validation(data);
     });
   };
   const update = (e) => {
     e.preventDefault();
-    const data = AuthorService.change(author.id, name, secondName, age).then(data => {
+    AuthorService.change(author.id, name, secondName, age).then(data => {
       validation(data);
     });
   };

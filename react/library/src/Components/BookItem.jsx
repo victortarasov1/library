@@ -1,6 +1,5 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState} from 'react';
 import {Button, Modal} from 'react-bootstrap';
-import AuthorsList from './AuthorsList';
 import BookForm from './BookForm';
 const BookItem = ({book, update, remove}) => {
   const [show, setShow] = useState(false);
@@ -16,8 +15,8 @@ const BookItem = ({book, update, remove}) => {
         <div>
           <h2> {book.description} </h2>
           <div>
-            <Button onClick = {() =>setModal(true)}> change </Button>
             <Button variant = "dark" onClick = {() => setShow(false)}> close </Button>
+            <Button onClick = {() =>setModal(true)}> change </Button>
             <Modal show = {modal} onHide = {setModal}> <BookForm book = {book}  createOrupdate = {change}/> </Modal>
           </div>
         </div>
