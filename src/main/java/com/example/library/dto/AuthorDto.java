@@ -1,5 +1,7 @@
 package com.example.library.dto;
 
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
 import com.example.library.model.Author;
@@ -21,6 +23,8 @@ public class AuthorDto {
 	private String name;
 	@NotNull(message = "second name must be setted")
 	private String secondName;
+	@Min(value = 1, message = "age must be bigger then zero")
+	@Max(value = 99, message = "age must be lover then hundred")
 	private int age;
 	public Author toAuthor() {
 		var author = new Author();
