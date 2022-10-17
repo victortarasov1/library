@@ -72,6 +72,7 @@ public class LibraryRestController {
     public ResponseEntity<String> deleteAuthorById(@PathVariable Long id) {
         var author = authorRepository.findAuthorByIdAndActuality(id, Actuality.ACTIVE).orElseThrow(() -> new AuthorNotFoundException(id));
         author.setActuality(Actuality.REMOVED);
+        author.setBooks(null);
         authorRepository.save(author);
         return ResponseEntity.status(HttpStatus.OK).body("deleted");
     }
@@ -118,4 +119,5 @@ public class LibraryRestController {
         var book = bookRepository.findById(id).orElseThrow(() -> new BookNotFoundException(id));
         return ResponseEntity.ok(book.getAuthors().stream().map(author -> modelMapper.map(author, AuthorDto.class)).toList());
     }
+    
 }

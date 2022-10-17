@@ -1,67 +1,62 @@
 export default class AuthorService {
-  static async getAll(){
-      try {
-        const response = await fetch ('http://localhost:8080/library/authors');
-        const data = await response.json();
-        return data;
-      } catch (e) {
-        alert(e);
-      }
-  }
-  static async getAuthorById(id){
-    try{
-      const response = await fetch ('http://localhost:8080/library/authors/' + id);
+  static async getAll () {
+    try {
+      const response = await fetch('http://localhost:8080/library/authors');
       const data = await response.json();
       return data;
     } catch (e) {
       alert(e);
     }
-  }
-
-  static async addNewAuthor(name, secondName, age, books){
-    const requestOptions = {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({name, secondName, age, books})
-    };
-
-    const response = await fetch('http://localhost:8080/library/authors', requestOptions);
-    const data = await response.json();
-    return data;
-
-  }
-
-  static async changeAuthor (id, name, secondName, age, books){
-    const requestOptions = {
+  };
+  static async getBook (id) {
+    try {
+      const response = await fetch('http://localhost:8080/library/authors/' + id);
+      const data = await response.json();
+      return data;
+    } catch (e) {
+      alert(e);
+    }
+  };
+  static async change(id, name, secondName, age) {
+    try {
+      const requestOptions = {
         method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({id, name, secondName, age, books})
-    };
+        headers: { 'Content-Type' : 'application/json'},
+        body: JSON.stringify({id, name, secondName, age})
+      };
+      const response = await fetch ('http://localhost:8080/library/authors', requestOptions);
+      const data = await response.json();
+      return data;
+    } catch (e){
+      alert(e);
+    }
+  };
 
-    const response = await fetch('http://localhost:8080/library/authors', requestOptions);
-    const data = await response.json();
-    return data;
-  }
-  static async deleteById (id){
-    const requestOptions = {
-        method: 'DELETE'
-    };
-    const response = await fetch('http://localhost:8080/library/authors/' + id, requestOptions);
-    const data = await response.json();
-    return data;
-  }
-
-
-  static async addNewTitle(authorId, title){
-    const requestOptions = {
+  static async add(name, secondName, age){
+    try{
+      const requestOptions = {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({title})
-    };
-    const response = await fetch('http://localhost:8080/library/authors/'+authorId, requestOptions);
-    const data = await response.json();
-    return data;
+        headers: { 'Content-Type' : 'application/json'},
+        body: JSON.stringify({ name, secondName, age})
+      };
+      const response = await fetch ('http://localhost:8080/library/authors', requestOptions);
+      const data = await response.json();
+      return data;
+    } catch(e){
+      alert(e);
+    }
+  };
 
-  }
+  static async delete(id){
+    try{
+         const requestOptions = {
+             method: 'DELETE',
+         };
+
+         const response = await fetch('http://localhost:8080/library/authors/' + id, requestOptions);
+
+       } catch(e) {
+         alert(e);
+       }
+  };
 }
-//export default AuthorService;

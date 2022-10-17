@@ -17,7 +17,7 @@ public class CheckIfAuthorIsUniqueValidationImpl implements ConstraintValidator 
 	public boolean isValid(AuthorDto dto, ConstraintValidatorContext context) {
 		try {
 			var authors = authorRepository.findAllByActuality(Actuality.ACTIVE)
-					.stream().map(author -> mapper.map(author, AuthorDto.class)).toList();
+					.stream().map(author -> mapper.map(author, AuthorDto.class)).filter(authorDto -> !authorDto.getId().equals(dto.getId())).toList();
 			return !authors.contains(dto);
 		} catch (Exception e) {
 			System.out.println(e.getMessage());

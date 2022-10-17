@@ -1,20 +1,18 @@
+import logo from './logo.svg';
 import './App.css';
-
-import 'bootstrap/dist/css/bootstrap.min.css';
 import {Routes, Route} from 'react-router-dom';
 import AuthorsList from './Components/AuthorsList';
-import BooksList from './Components/BookList';
+import BooksList from './Components/BooksList';
 function App() {
   return (
-    <div>
+    <div className="App">
       <header className = "App-header">
-        <a href="/authors"> authors </a>
-        <a href="/books"> books </a>
+        <a href = "/authors"> authors </a>
+        <a href = "/books"> books </a>
       </header>
       <Routes>
-        <Route path = "/authors" element = { <AuthorsList />} />
-        <Route path = "/books" element = { <BooksList />} />
-        <Route path = "/" element = { <BooksList />} />
+        <Route path = "/authors" element = {  <AuthorsList/>}/>
+        <Route path = "/books" element = {  <BooksList/>}/>
       </Routes>
     </div>
   );
