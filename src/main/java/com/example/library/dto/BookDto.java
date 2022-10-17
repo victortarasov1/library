@@ -8,9 +8,7 @@ import lombok.*;
 
 import java.util.Objects;
 
-/*
- * book only with title
- */
+
 @Getter
 @Setter
 @AllArgsConstructor
@@ -18,9 +16,9 @@ import java.util.Objects;
 @EqualsAndHashCode
 public class BookDto {
 	private Long id;
-	@NotNull(message  = "title must be setted!")
+	@Size(min = 1, max = 30, message ="title must be between 1 and 30 literals")
 	private String title;
-	@Size(min = 0, max = 30, message ="description must be between 0 and 30 literals")
+	@Size(min = 0, max = 100, message ="description must be between 0 and 100 literals")
 	private String description;
 	public Book toBook() {
 		Book book = new Book();

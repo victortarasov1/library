@@ -13,16 +13,20 @@ import org.springframework.validation.beanvalidation.SpringConstraintValidatorFa
 
 @Configuration
 public class LibraryConfig {
-	@Bean
-	public ModelMapper getMapper() {
-	    return new ModelMapper();
-	}
-	@Bean
-	public Validator validator(AutowireCapableBeanFactory beanFactory) {
-	    ValidatorFactory validatorFactory = Validation.byProvider(HibernateValidator.class).configure()
-	            .constraintValidatorFactory(new SpringConstraintValidatorFactory(beanFactory))
-	            .buildValidatorFactory();
+    @Bean
+    public ModelMapper getMapper() {
+        return new ModelMapper();
+    }
 
-	    return validatorFactory.getValidator();
-	}
+    @Bean
+    public Validator validator(AutowireCapableBeanFactory beanFactory) {
+        try (ValidatorFactory validatorFactory = Validation.byProvider(HibernateValidator.class).configure()
+                .constraintValidatorFactory(new SpringConstraintValidatorFactory(beanFactory))
+                .buildValidatorFactory();) {
+            return validatorFactory.getValidator();
+        } catch (Exception ex) {
+            throw ex;
+        }
+
+    }
 }

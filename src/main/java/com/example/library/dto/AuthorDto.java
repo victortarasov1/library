@@ -3,6 +3,7 @@ package com.example.library.dto;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 import com.example.library.model.Author;
 import com.example.library.model.Actuality;
@@ -19,9 +20,9 @@ import java.util.Objects;
 @CheckIfAuthorIsUniqueValidation
 public class AuthorDto {
 	private Long id;
-	@NotNull(message = "name must be setted")
+	@Size(min = 1, max = 15, message = "first name must be setted")
 	private String name;
-	@NotNull(message = "second name must be setted")
+	@Size(min = 1, max = 15, message = "second name must be setted")
 	private String secondName;
 	@Min(value = 1, message = "age must be bigger then zero")
 	@Max(value = 99, message = "age must be lover then hundred")
