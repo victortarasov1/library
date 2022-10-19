@@ -4,6 +4,7 @@ package com.example.library.model;
 import lombok.*;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 
@@ -32,11 +33,9 @@ public class Author {
     private List<Book> books;
 
     public void addBook(Book book) {
-
-        if (books == null || books.size() == 0) {
-            books = new ArrayList<>();
-        }
-       
+        var tmp = books;
+        books = new LinkedList<>();
+        books.addAll(tmp);
         books.add(book);
     }
 
