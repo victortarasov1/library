@@ -24,6 +24,7 @@ public class BookDto {
 		Book book = new Book();
 		book.setTitle(title);
 		book.setDescription(description);
+		book.setId(id);
 		return book;
 	}
 }

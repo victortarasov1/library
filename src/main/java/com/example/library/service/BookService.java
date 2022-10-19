@@ -6,5 +6,5 @@ import com.example.library.model.Book;
 
 public interface BookService {
     void checkIfAnotherAuthorsHaveThisBook(Book b);
-    void checkIfAuthorAlreadyContainsBook(Long authorId, BookDto dto) throws AuthorContainsBookException;
+
 }

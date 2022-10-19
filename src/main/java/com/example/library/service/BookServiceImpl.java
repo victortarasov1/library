@@ -27,12 +27,4 @@ public class BookServiceImpl implements BookService{
         }
     }
 
-    @Override
-    public void checkIfAuthorAlreadyContainsBook(Long authorId, BookDto dto) throws AuthorContainsBookException {
-        var author = authorRepository.findAuthorByIdAndActuality(authorId, Actuality.ACTIVE)
-                .orElseThrow(()-> new AuthorNotFoundException(authorId));
-        if(author.getBooks().contains(dto.toBook())){
-            throw new AuthorContainsBookException();
-        }
-    }
 }

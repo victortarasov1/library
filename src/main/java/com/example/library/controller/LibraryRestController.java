@@ -81,7 +81,6 @@ public class LibraryRestController {
     public ResponseEntity<BookDto> addBook(@PathVariable Long id, @RequestBody @Valid BookDto dto) throws AuthorContainsBookException {
         var author = authorRepository.findAuthorByIdAndActuality(id, Actuality.ACTIVE).orElseThrow(() -> new AuthorNotFoundException(id));
         var book = dto.toBook();
-        book.setId(dto.getId());
         if(author.getBooks().contains(book)){
             throw new AuthorContainsBookException();
         }
@@ -96,7 +95,6 @@ public class LibraryRestController {
         var author = authorRepository.findAuthorByIdAndActuality(id, Actuality.ACTIVE).orElseThrow(() -> new AuthorNotFoundException(id));
         author.setBooks(author.getBooks().stream().filter(book -> !book.getId().equals(dto.getId())).toList());
         var book = dto.toBook();
-        book.setId(dto.getId());
         if(author.getBooks().contains(book)){
             throw new AuthorContainsBookException();
         }
