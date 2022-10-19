@@ -80,10 +80,12 @@ public class LibraryRestController {
     @PostMapping("/authors/{id}")
     public ResponseEntity<BookDto> addBook(@PathVariable Long id, @RequestBody @Valid BookDto dto) throws AuthorContainsBookException {
         var author = authorRepository.findAuthorByIdAndActuality(id, Actuality.ACTIVE).orElseThrow(() -> new AuthorNotFoundException(id));
-        bookService.checkIfAuthorAlreadyContainsBook(id, dto);
-        bookService.checkIfAnotherAuthorsHaveThisBook(dto);
         var book = dto.toBook();
         book.setId(dto.getId());
+        if(author.getBooks().contains(book)){
+            throw new AuthorContainsBookException();
+        }
+        bookService.checkIfAnotherAuthorsHaveThisBook(book);
         author.addBook(book);
         var books = authorRepository.save(author).getBooks();
         return ResponseEntity.ok(modelMapper.map(books.get(books.size() - 1), BookDto.class));
@@ -92,18 +94,16 @@ public class LibraryRestController {
     @PatchMapping("/authors/{id}/books")
     public ResponseEntity<BookDto> changeBook(@PathVariable Long id, @RequestBody @Valid BookDto dto) {
         var author = authorRepository.findAuthorByIdAndActuality(id, Actuality.ACTIVE).orElseThrow(() -> new AuthorNotFoundException(id));
-        var books = author.getBooks().stream().filter(book -> !book.getId().equals(dto.getId())).toList();
-        if(books.contains(dto.toBook())){
-            throw new AuthorContainsBookException();
-        }
-
-        bookService.checkIfAnotherAuthorsHaveThisBook(dto);
-        author.setBooks(books);
+        author.setBooks(author.getBooks().stream().filter(book -> !book.getId().equals(dto.getId())).toList());
         var book = dto.toBook();
         book.setId(dto.getId());
+        if(author.getBooks().contains(book)){
+            throw new AuthorContainsBookException();
+        }
+        bookService.checkIfAnotherAuthorsHaveThisBook(book);
         author.addBook(book);
-        authorRepository.save(author);
-        return  ResponseEntity.ok(dto);
+        var books = authorRepository.save(author).getBooks();
+        return ResponseEntity.ok(modelMapper.map(books.get(books.size() - 1), BookDto.class));
     }
 
     @DeleteMapping("/authors/{authorsId}/books/{bookId}")
