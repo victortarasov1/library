@@ -89,13 +89,21 @@ public class LibraryRestController {
         return ResponseEntity.ok(modelMapper.map(books.get(books.size() - 1), BookDto.class));
     }
 
-    @PatchMapping("/books")
-    public ResponseEntity<BookDto> changeBook(@RequestBody @Valid BookDto dto) {
-        var book = bookRepository.findById(dto.getId()).orElseThrow(() -> new BookNotFoundException(dto.getId()));
-        book.setDescription(dto.getDescription());
-        book.setTitle(dto.getTitle());
+    @PatchMapping("/authors/{id}/books")
+    public ResponseEntity<BookDto> changeBook(@PathVariable Long id, @RequestBody @Valid BookDto dto) {
+        var author = authorRepository.findAuthorByIdAndActuality(id, Actuality.ACTIVE).orElseThrow(() -> new AuthorNotFoundException(id));
+        var books = author.getBooks().stream().filter(book -> !book.getId().equals(dto.getId())).toList();
+        if(books.contains(dto.toBook())){
+            throw new AuthorContainsBookException();
+        }
+
         bookService.checkIfAnotherAuthorsHaveThisBook(dto);
-        return ResponseEntity.ok(modelMapper.map(bookRepository.save(book), BookDto.class));
+        author.setBooks(books);
+        var book = dto.toBook();
+        book.setId(dto.getId());
+        author.addBook(book);
+        authorRepository.save(author);
+        return  ResponseEntity.ok(dto);
     }
 
     @DeleteMapping("/authors/{authorsId}/books/{bookId}")

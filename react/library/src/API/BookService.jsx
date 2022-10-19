@@ -18,14 +18,14 @@ export default class BookService {
       alert(e);
     }
   };
-  static async change(id, title, description) {
+  static async change(authorId, id, title, description) {
     try {
       const requestOptions = {
         method: 'PATCH',
         headers: { 'Content-Type' : 'application/json'},
         body: JSON.stringify({id,title, description})
       };
-      const response = await fetch ('http://localhost:8080/library/books', requestOptions);
+      const response = await fetch ('http://localhost:8080/library/authors/' + authorId + '/books', requestOptions);
       const data = await response.json();
       return data;
     } catch (e){

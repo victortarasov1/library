@@ -33,7 +33,7 @@ public class Author {
 
     public void addBook(Book book) {
 
-        if (books == null) {
+        if (books == null || books.size() == 0) {
             books = new ArrayList<>();
         }
        

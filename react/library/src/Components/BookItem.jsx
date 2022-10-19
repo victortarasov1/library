@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import {Button, Modal} from 'react-bootstrap';
 import BookForm from './BookForm';
-const BookItem = ({book, update, remove}) => {
+const BookItem = ({id, book, update, remove}) => {
   const [show, setShow] = useState(false);
   const [modal, setModal] = useState(false);
   const change = (book) => {
@@ -17,7 +17,7 @@ const BookItem = ({book, update, remove}) => {
           <div>
             <Button variant = "dark" onClick = {() => setShow(false)}> close </Button>
             <Button onClick = {() =>setModal(true)}> change </Button>
-            <Modal show = {modal} onHide = {setModal}> <BookForm book = {book}  createOrupdate = {change}/> </Modal>
+            <Modal show = {modal} onHide = {setModal}> <BookForm id = {id} book = {book}  createOrupdate = {change}/> </Modal>
           </div>
         </div>
       ) :(

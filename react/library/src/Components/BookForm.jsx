@@ -13,7 +13,7 @@ const BookForm = ({createOrupdate, book, id}) => {
   };
   const update = (e) => {
     e.preventDefault();
-    BookService.change(book.id, title, description).then(data => {
+    BookService.change(id, book.id, title, description).then(data => {
       validation(data);
     });
   };

@@ -8,7 +8,7 @@ const AuthorBooksList = ({id}) => {
   const [books, setBooks] = useState([]);
   const [modal, setModal] = useState(false);
   const update = (book) => {
-    setBooks([...books.filter(b => b.id !== book.id), book]);
+    fetchBooks();
   };
   const create = (book) => {
     setBooks([...books, book]);
@@ -34,7 +34,7 @@ const AuthorBooksList = ({id}) => {
           <div className = "list">
             {books.map( book =>
               <div>
-                <BookItem book = {book} update = {update} remove = {remove}/>
+                <BookItem id =  {id} book = {book} update = {update} remove = {remove}/>
               </div>
             )}
           </div>
