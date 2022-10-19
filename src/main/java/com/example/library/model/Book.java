@@ -20,7 +20,7 @@ public class Book {
 	private Long id;
 	private String title;
 	private String description;
-	@ManyToMany(mappedBy = "books")
+	@ManyToMany(mappedBy = "books", fetch = FetchType.LAZY)
 	List<Author> authors;
 
 	@Override
