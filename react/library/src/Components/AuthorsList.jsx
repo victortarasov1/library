@@ -3,9 +3,11 @@ import AuthorService from '../API/AuthorService';
 import {Button, Modal} from 'react-bootstrap';
 import AuthorItem from './AuthorItem';
 import AuthorForm from './AuthorForm';
+import Loader from '../UI/Loader/Loader';
 const AuthorsList = () => {
   const [authors, setAuthors] = useState([]);
   const [modal, setModal] = useState(false);
+  const [loading, setLoading] = useState(false);
   const update = (author) => {
     setAuthors([...authors.filter(a => a.id !== author.id), author]);
   };
@@ -23,31 +25,46 @@ const AuthorsList = () => {
     setAuthors(response);
     console.log("authors");
     console.log(authors);
+
   };
   useEffect( () => {
+    setLoading(true);
+    setTimeout ( () => {
       fetchAuthors();
+      setLoading(false);
+    }, 1000);
   }, []);
   return (
-    <div>
       <div>
-        { authors.length ? (
-            <div className = "list">
-              {authors.map( author =>
-                <AuthorItem author = {author} update = {update} remove = {remove}/>
-              )}
+      {loading ? (
+            <div style = {{display: 'flex', justifyContent: 'center'}}>
+              <Loader />
             </div>
-          ) : (
+        ) : (
+            <div>
               <div>
-                <h1> authors not found! </h1>
+                {authors.length ? (
+                    <div className="list">
+                      {authors.map(author =>
+                          <AuthorItem author={author} update={update} remove={remove}/>
+                      )}
+                    </div>
+                ) : (
+                    <div>
+                      <h1> authors not found! </h1>
+                    </div>
+                )
+                }
               </div>
-          )
-        }
+              <div>
+                <Button variant="primary" onClick={() => setModal(true)}> add </Button>
+                <Modal show={modal} onHide={setModal}> <AuthorForm createOrupdate={create}/> </Modal>
+              </div>
+            </div>
+        )
+      }
       </div>
-      <div>
-        <Button variant = "primary" onClick = {() => setModal(true)}> add </Button>
-        <Modal show = {modal} onHide = {setModal} > <AuthorForm createOrupdate = {create} /> </Modal>
-      </div>
-    </div>
+
   );
 };
 export default AuthorsList;

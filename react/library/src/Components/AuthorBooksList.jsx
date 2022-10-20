@@ -4,9 +4,11 @@ import AuthorService from '../API/AuthorService';
 import BookService from '../API/BookService';
 import BookItem from './BookItem';
 import BookForm from './BookForm';
+import Loader from '../UI/Loader/Loader';
 const AuthorBooksList = ({id}) => {
   const [books, setBooks] = useState([]);
   const [modal, setModal] = useState(false);
+  const [loading, setLoading] = useState(false);
   const update = (book) => {
     fetchBooks();
   };
@@ -25,30 +27,42 @@ const AuthorBooksList = ({id}) => {
     setBooks(response);
   };
   useEffect( () => {
+    setLoading(true);
+    setTimeout ( () => {
       fetchBooks();
+      setLoading(false);
+    }, 1000);
   }, []);
   return (
-    <div>
       <div>
-        { books.length ? (
-          <div className = "list">
-            {books.map( book =>
-              <div>
-                <BookItem id =  {id} book = {book} update = {update} remove = {remove}/>
-              </div>
-            )}
-          </div>
+        {loading ? (
+            <div style = {{display: 'flex', justifyContent: 'center'}}>
+              <Loader />
+            </div>
         ):(
           <div>
-            <h1> books not found! </h1>
+            <div>
+              { books.length ? (
+                <div className = "list">
+                  {books.map( book =>
+                    <div>
+                      <BookItem id =  {id} book = {book} update = {update} remove = {remove}/>
+                    </div>
+                  )}
+                </div>
+              ):(
+                <div>
+                  <h1> books not found! </h1>
+                </div>
+              )}
+            </div>
+            <div>
+              <Button onClick = {()=> setModal(true)}> add </Button>
+              <Modal show = {modal} onHide = {setModal}> <BookForm createOrupdate = {create} id = {id} /> </Modal>
+            </div>
           </div>
         )}
       </div>
-      <div>
-        <Button onClick = {()=> setModal(true)}> add </Button>
-        <Modal show = {modal} onHide = {setModal}> <BookForm createOrupdate = {create} id = {id} /> </Modal>
-      </div>
-    </div>
   );
 };
 export default AuthorBooksList;
