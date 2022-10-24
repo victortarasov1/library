@@ -33,10 +33,15 @@ public class Author {
     private List<Book> books;
 
     public void addBook(Book book) {
-        var tmp = books;
-        books = new LinkedList<>();
-        books.addAll(tmp);
-        books.add(book);
+        if(books != null) {
+            var tmp = books;
+            books = new LinkedList<>();
+            books.addAll(tmp);
+            books.add(book);
+        } else {
+            books = new LinkedList<>();
+            books.add(book);
+        }
     }
 
     public void removeBook(Book book) {
