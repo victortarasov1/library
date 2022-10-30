@@ -133,8 +133,7 @@ class LibraryRestControllerTest {
         var author = new Author();
         var book = new Book(1L,"title", "description", null);
         var dto = new BookDto(1L, "title", "description");
-        doNothing().when(authorService).checkIfAnotherAuthorsHaveThisBook(book);
-        when(authorRepository.save(author)).thenReturn(author);
+        when(authorService.addBook(author, dto.toBook())).thenReturn(List.of(book));
         when(modelMapper.map(book, BookDto.class)).thenReturn(dto);
         when(authorRepository.findAuthorByIdAndActuality(1L, Actuality.ACTIVE)).thenReturn(Optional.of(author));
         this.mock.perform(post("/library/authors/1")
@@ -153,8 +152,7 @@ class LibraryRestControllerTest {
         var dto = new BookDto(1L, "title", "description");
         var author = new Author();
         author.addBook(book);
-        doNothing().when(authorService).checkIfAnotherAuthorsHaveThisBook(book);
-        when(authorRepository.save(author)).thenReturn(author);
+        when(authorService.addBook(author, dto.toBook())).thenReturn(List.of(book));
         when(modelMapper.map(book, BookDto.class)).thenReturn(dto);
         when(authorRepository.findAuthorByIdAndActuality(1L, Actuality.ACTIVE)).thenReturn(Optional.of(author));
         this.mock.perform(patch("/library/authors/1/books")
