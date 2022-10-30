@@ -81,12 +81,7 @@ public class LibraryRestController {
     public BookDto addBook(@PathVariable Long id, @RequestBody @Valid BookDto dto) throws AuthorContainsBookException {
         var author = authorRepository.findAuthorByIdAndActuality(id, Actuality.ACTIVE).orElseThrow(() -> new AuthorNotFoundException(id));
         var book = dto.toBook();
-        if(author.getBooks() != null && author.getBooks().contains(book)){
-            throw new AuthorContainsBookException();
-        }
-        bookService.checkIfAnotherAuthorsHaveThisBook(book);
-        author.addBook(book);
-        var books = authorRepository.save(author).getBooks();
+        var books = bookService.addBook(author, book);
         return modelMapper.map(books.get(books.size() - 1), BookDto.class);
     }
 
@@ -95,12 +90,7 @@ public class LibraryRestController {
         var author = authorRepository.findAuthorByIdAndActuality(id, Actuality.ACTIVE).orElseThrow(() -> new AuthorNotFoundException(id));
         author.setBooks(author.getBooks().stream().filter(book -> !book.getId().equals(dto.getId())).toList());
         var book = dto.toBook();
-        if(author.getBooks().contains(book)){
-            throw new AuthorContainsBookException();
-        }
-        bookService.checkIfAnotherAuthorsHaveThisBook(book);
-        author.addBook(book);
-        var books = authorRepository.save(author).getBooks();
+        var books = bookService.addBook(author, book);
         return modelMapper.map(books.get(books.size() - 1), BookDto.class);
     }
 
