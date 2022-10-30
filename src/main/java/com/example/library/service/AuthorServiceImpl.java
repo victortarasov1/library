@@ -27,7 +27,7 @@ public class AuthorServiceImpl implements AuthorService {
 
     @Override
     public List<Book> addBook(Author author, Book book) {
-        if(author.getBooks().contains(book)){
+        if(author.getBooks() != null && author.getBooks().contains(book)){
             throw new AuthorContainsBookException();
         }
         checkIfAnotherAuthorsHaveThisBook(book);
