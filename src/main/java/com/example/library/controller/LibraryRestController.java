@@ -10,11 +10,9 @@ import com.example.library.exception.BookNotFoundException;
 import com.example.library.model.Actuality;
 import com.example.library.repository.AuthorRepository;
 import com.example.library.repository.BookRepository;
-import com.example.library.service.BookService;
+import com.example.library.service.AuthorService;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -36,7 +34,7 @@ public class LibraryRestController {
     private ModelMapper modelMapper;
     private AuthorRepository authorRepository;
     private BookRepository bookRepository;
-    private BookService bookService;
+    private AuthorService authorService;
     @GetMapping("/authors")
     public List<AuthorDto> findAll() {
         var authors = authorRepository.findAllByActuality(Actuality.ACTIVE);
@@ -80,8 +78,7 @@ public class LibraryRestController {
     @PostMapping("/authors/{id}")
     public BookDto addBook(@PathVariable Long id, @RequestBody @Valid BookDto dto) throws AuthorContainsBookException {
         var author = authorRepository.findAuthorByIdAndActuality(id, Actuality.ACTIVE).orElseThrow(() -> new AuthorNotFoundException(id));
-        var book = dto.toBook();
-        var books = bookService.addBook(author, book);
+        var books = authorService.addBook(author, dto.toBook());
         return modelMapper.map(books.get(books.size() - 1), BookDto.class);
     }
 
@@ -89,8 +86,7 @@ public class LibraryRestController {
     public BookDto changeBook(@PathVariable Long id, @RequestBody @Valid BookDto dto) {
         var author = authorRepository.findAuthorByIdAndActuality(id, Actuality.ACTIVE).orElseThrow(() -> new AuthorNotFoundException(id));
         author.setBooks(author.getBooks().stream().filter(book -> !book.getId().equals(dto.getId())).toList());
-        var book = dto.toBook();
-        var books = bookService.addBook(author, book);
+        var books = authorService.addBook(author, dto.toBook());
         return modelMapper.map(books.get(books.size() - 1), BookDto.class);
     }
 

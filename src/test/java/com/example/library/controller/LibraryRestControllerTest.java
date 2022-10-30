@@ -7,8 +7,7 @@ import com.example.library.model.Author;
 import com.example.library.model.Book;
 import com.example.library.repository.AuthorRepository;
 import com.example.library.repository.BookRepository;
-import com.example.library.service.BookService;
-import com.fasterxml.jackson.core.JsonProcessingException;
+import com.example.library.service.AuthorService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -46,7 +45,7 @@ class LibraryRestControllerTest {
     @MockBean
     private BookRepository bookRepository;
     @MockBean
-    private BookService bookService;
+    private AuthorService authorService;
     @Autowired
     ObjectMapper objectMapper;
     @Autowired
@@ -134,7 +133,7 @@ class LibraryRestControllerTest {
         var author = new Author();
         var book = new Book(1L,"title", "description", null);
         var dto = new BookDto(1L, "title", "description");
-        doNothing().when(bookService).checkIfAnotherAuthorsHaveThisBook(book);
+        doNothing().when(authorService).checkIfAnotherAuthorsHaveThisBook(book);
         when(authorRepository.save(author)).thenReturn(author);
         when(modelMapper.map(book, BookDto.class)).thenReturn(dto);
         when(authorRepository.findAuthorByIdAndActuality(1L, Actuality.ACTIVE)).thenReturn(Optional.of(author));
@@ -154,7 +153,7 @@ class LibraryRestControllerTest {
         var dto = new BookDto(1L, "title", "description");
         var author = new Author();
         author.addBook(book);
-        doNothing().when(bookService).checkIfAnotherAuthorsHaveThisBook(book);
+        doNothing().when(authorService).checkIfAnotherAuthorsHaveThisBook(book);
         when(authorRepository.save(author)).thenReturn(author);
         when(modelMapper.map(book, BookDto.class)).thenReturn(dto);
         when(authorRepository.findAuthorByIdAndActuality(1L, Actuality.ACTIVE)).thenReturn(Optional.of(author));

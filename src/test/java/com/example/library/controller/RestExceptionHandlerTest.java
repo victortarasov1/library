@@ -5,7 +5,7 @@ import com.example.library.exception.AuthorNotFoundException;
 import com.example.library.model.Actuality;
 import com.example.library.repository.AuthorRepository;
 import com.example.library.repository.BookRepository;
-import com.example.library.service.BookService;
+import com.example.library.service.AuthorService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -19,7 +19,6 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.hamcrest.Matchers.equalTo;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -34,7 +33,7 @@ class RestExceptionHandlerTest {
     @MockBean
     private BookRepository bookRepository;
     @MockBean
-    private BookService bookService;
+    private AuthorService authorService;
     @Autowired
     ObjectMapper objectMapper;
     @Autowired
