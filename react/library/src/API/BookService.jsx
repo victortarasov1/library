@@ -2,8 +2,7 @@ export default class BookService {
   static async getAll(){
       try {
         const response = await fetch('http://localhost:8080/library/books/');
-        const data = await response.json();
-        return data;
+        return await response.json();
       } catch (e) {
         alert(e);
       }
@@ -12,8 +11,7 @@ export default class BookService {
   static async getAuthors(id) {
     try {
       const response = await fetch('http://localhost:8080/library/books/' + id);
-      const data = await response.json();
-      return data;
+      return await response.json();
     } catch (e) {
       alert(e);
     }
@@ -26,8 +24,7 @@ export default class BookService {
         body: JSON.stringify({id,title, description})
       };
       const response = await fetch ('http://localhost:8080/library/authors/' + authorId + '/books', requestOptions);
-      const data = await response.json();
-      return data;
+      return await response.json();
     } catch (e){
       alert(e);
     }
@@ -41,8 +38,7 @@ export default class BookService {
         body: JSON.stringify({title, description})
       };
       const response = await fetch ('http://localhost:8080/library/authors/' + authorId, requestOptions);
-      const data = await response.json();
-      return data;
+      return await response.json();
     } catch(e){
       alert(e);
     }
@@ -53,9 +49,7 @@ export default class BookService {
          const requestOptions = {
              method: 'DELETE',
          };
-
-         const response = await fetch('http://localhost:8080/library/authors/' + authorId + '/books/' + id, requestOptions);
-
+         await fetch('http://localhost:8080/library/authors/' + authorId + '/books/' + id, requestOptions);
        } catch(e) {
          alert(e);
        }
