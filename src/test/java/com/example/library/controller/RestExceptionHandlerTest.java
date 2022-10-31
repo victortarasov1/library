@@ -74,7 +74,7 @@ class RestExceptionHandlerTest {
         this.mock.perform(get("/library/authors/ddd"))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("message", equalTo("The parameter 'participantId' of value 'ddd' could not be converted to type 'Long'")));
+                .andExpect(jsonPath("message", equalTo("The parameter 'id' of value 'ddd' could not be converted to type 'Long'")));
     }
 
     @Test
