@@ -11,7 +11,6 @@ import java.util.Optional;
 
 //@Repository
 public interface AuthorRepository extends JpaRepository<Author, Long>{
-	//Optional <Author> getEquals(String name, String secondName);
     List<Author> findAllByActuality(Actuality actuality);
     Optional<Author> findAuthorByIdAndActuality(Long id, Actuality actuality);
 }

@@ -26,9 +26,6 @@ public class Author {
     private String secondName;
     private int age;
     private Actuality actuality;
-    /*
-     * "cascade = CascadeType.ALL" - if removes author, his books will be removed too
-     */
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Book> books;
 

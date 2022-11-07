@@ -17,13 +17,4 @@ public class LibraryConfig {
     public ModelMapper getMapper() {
         return new ModelMapper();
     }
-
-    @Bean
-    public Validator validator(AutowireCapableBeanFactory beanFactory) {
-        try (ValidatorFactory validatorFactory = Validation.byProvider(HibernateValidator.class).configure()
-                .constraintValidatorFactory(new SpringConstraintValidatorFactory(beanFactory))
-                .buildValidatorFactory();) {
-            return validatorFactory.getValidator();
-        }
-    }
 }
