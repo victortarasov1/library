@@ -2,7 +2,7 @@
 <h2> Description: </h2>
 <div>
 Library is a RESTful Java Spring Boot application which allows to obtain the catalogue of books and authors.
-Spring Data JPA is used to access data. The program implements to entities - Author and Book with ManyToMany bidirectional relationship. Where the owner side is Author.
+Spring Data JPA is used to access data. The program implements two entities - Author and Book with ManyToMany bidirectional relationship. Where the owner side is Author.
 The Author entity has the folowing fields: name, second name, age and actuality (Enum with fields ACTIVE and REMOVED) and list of books.
 The Book entity has fields: title, description and list of authors.  A Book can be writen by one or more authors.
 The program allows to obtain the catalogue of authors(only that, who have Active status) and for each  author get list of his books.  The program allows you to add/remove/change author and add/remove/change his book.
