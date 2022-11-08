@@ -11,7 +11,7 @@ Also program allows you to get list of books(that have at least one author).
 </div>
 <h2>Used Technologies:</h2>
  <div>
- Back-end: Spring Boot, Spring Web, Spring Data JPA, ModelMapper, MariaDB, Mockito, Lombok.
+ Back-end: Spring Boot, Spring Web, Spring Data JPA, ModelMapper, Hibernate Validator, MariaDB, Mockito, Lombok.
   </div>
   <div>
  Front-end: ReactJS.
