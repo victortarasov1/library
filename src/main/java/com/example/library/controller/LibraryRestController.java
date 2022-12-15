@@ -1,5 +1,6 @@
 package com.example.library.controller;
 
+import java.util.LinkedList;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -8,6 +9,7 @@ import com.example.library.exception.AuthorContainsBookException;
 import com.example.library.exception.AuthorNotFoundException;
 import com.example.library.exception.BookNotFoundException;
 import com.example.library.model.Actuality;
+import com.example.library.model.Book;
 import com.example.library.repository.AuthorRepository;
 import com.example.library.repository.BookRepository;
 import com.example.library.service.AuthorService;
@@ -37,15 +39,13 @@ public class LibraryRestController {
     private AuthorService authorService;
     @GetMapping("/authors")
     public List<AuthorDto> findAll() {
-        var authors = authorRepository.findAllByActuality(Actuality.ACTIVE);
-        return authors.stream().map(author -> modelMapper.map(author, AuthorDto.class)).toList();
+        return authorRepository.findAllByActuality(Actuality.ACTIVE).stream().map(author -> modelMapper.map(author, AuthorDto.class)).toList();
     }
 
 
     @GetMapping("/authors/{id}")
     public List<BookDto> findById(@PathVariable Long id) {
-        var author = authorRepository.findAuthorByIdAndActuality(id, Actuality.ACTIVE).orElseThrow(() -> new AuthorNotFoundException(id));
-        return author.getBooks().stream().map(book -> modelMapper.map(book, BookDto.class)).toList();
+        return bookRepository.getBooksByAuthorId(id).stream().map(book -> modelMapper.map(book, BookDto.class)).toList();
     }
 
     @PatchMapping("/authors")
@@ -77,17 +77,27 @@ public class LibraryRestController {
 
     @PostMapping("/authors/{id}")
     public BookDto addBook(@PathVariable Long id, @RequestBody @Valid BookDto dto) throws AuthorContainsBookException {
-        var author = authorRepository.findAuthorByIdAndActuality(id, Actuality.ACTIVE).orElseThrow(() -> new AuthorNotFoundException(id));
-        var books = authorService.addBook(author, dto.toBook());
-        return modelMapper.map(books.get(books.size() - 1), BookDto.class);
+//        if(bookRepository.checkIfAuthorContainsBookByTitle(id, dto.getTitle()).isPresent()) {
+//            throw new AuthorContainsBookException();
+//        }
+//        var author = authorRepository.findAuthorByIdAndActuality(id, Actuality.ACTIVE).orElseThrow(() -> new AuthorNotFoundException(id));
+//        //var book = bookRepository.findUsedBookByTitle(dto.getTitle()).orElse(dto.toBook());
+//        author.addBook(dto.toBook());
+//        return modelMapper.map(new LinkedList<Book> (authorRepository.save(author).getBooks()).getLast(), BookDto.class);
+        return null;
     }
 
     @PatchMapping("/authors/{id}/books")
     public BookDto changeBook(@PathVariable Long id, @RequestBody @Valid BookDto dto) {
-        var author = authorRepository.findAuthorByIdAndActuality(id, Actuality.ACTIVE).orElseThrow(() -> new AuthorNotFoundException(id));
-        author.setBooks(author.getBooks().stream().filter(book -> !book.getId().equals(dto.getId())).toList());
-        var books = authorService.addBook(author, dto.toBook());
-        return modelMapper.map(books.get(books.size() - 1), BookDto.class);
+//        if(bookRepository.checkIfAuthorContainsBookByTitle(id, dto.getTitle()).isPresent()) {
+//            throw new AuthorContainsBookException();
+//        }
+//        var author = authorRepository.findAuthorByIdAndActuality(id, Actuality.ACTIVE).orElseThrow(() -> new AuthorNotFoundException(id));
+//        var book = bookRepository.findBookByTitle(dto.getTitle()).orElse(dto.toBook());
+//        book.setDescription(dto.getDescription());
+//        author.addBook(book);
+//        return modelMapper.map(new LinkedList<Book> (authorRepository.save(author).getBooks()).getLast(), BookDto.class);
+        return null;
     }
 
     @DeleteMapping("/authors/{authorsId}/books/{bookId}")
@@ -101,15 +111,16 @@ public class LibraryRestController {
 
     @GetMapping("/books")
     public List<BookDto> getBooks() {
-        var books = bookRepository.findAll();
-        books = books.stream().filter(book -> book.getAuthors().size() != 0).toList();
-        return books.stream().map(book -> modelMapper.map(book, BookDto.class)).toList();
+        return bookRepository.getBooksWithAuthors().stream().map(book -> modelMapper.map(book, BookDto.class)).toList();
     }
 
     @GetMapping("/books/{id}")
     public List<AuthorDto> getAuthors(@PathVariable Long id) {
-        var book = bookRepository.findById(id).orElseThrow(() -> new BookNotFoundException(id));
-        return book.getAuthors().stream().map(author -> modelMapper.map(author, AuthorDto.class)).toList();
+        var authors = authorRepository.getAuthorsOfBook(id);
+        if(authors == null) {
+            throw new BookNotFoundException(id);
+        }
+        return authors.stream().map(author -> modelMapper.map(author, AuthorDto.class)).toList();
     }
     
 }
