@@ -16,6 +16,6 @@ public interface AuthorRepository extends JpaRepository<Author, Long>{
     List<Author> findAllByActuality(Actuality actuality);
     Optional<Author> findAuthorByIdAndActuality(Long id, Actuality actuality);
 
-    @Query(value = "select * from authors join authors_books ab on authors.id = ab.authors_id and ab.books_id = ?1", nativeQuery = true)
+    @Query(value = "select * from authors join authors_books ab on authors.id = ab.authors_id and authors.actuality = 0 and ab.books_id = ?1", nativeQuery = true)
     List<Author> getAuthorsOfBook(Long bookId);
 }

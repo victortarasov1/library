@@ -67,7 +67,6 @@ public class LibraryRestController {
     public String deleteAuthorById(@PathVariable Long id) {
         var author = authorRepository.findAuthorByIdAndActuality(id, Actuality.ACTIVE).orElseThrow(() -> new AuthorNotFoundException(id));
         author.setActuality(Actuality.REMOVED);
-        author.setBooks(null);
         authorRepository.save(author);
         return "deleted";
     }
@@ -82,10 +81,7 @@ public class LibraryRestController {
 
     @PatchMapping("/authors/{id}/books")
     public BookDto changeBook(@PathVariable Long id, @RequestBody @Valid BookDto dto) {
-        if(bookRepository.checkIfAuthorContainsBookById(id, dto.getId()).isEmpty()) {
-            throw new AuthorDoesntContainsBookException();
-        }
-        var changed = bookRepository.findById(dto.getId()).orElseThrow(() -> new BookNotFoundException(dto.getId()));
+        var changed = bookRepository.checkIfAuthorContainsBookById(id, dto.getId()).orElseThrow(AuthorDoesntContainsBookException::new);
         changed.setTitle(dto.getTitle());
         changed.setDescription(dto.getDescription());
         return modelMapper.map(bookRepository.save(changed), BookDto.class);
