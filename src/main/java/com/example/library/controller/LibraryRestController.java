@@ -1,18 +1,16 @@
 package com.example.library.controller;
 
-import java.util.LinkedList;
 import java.util.List;
 
 import javax.validation.Valid;
 
 import com.example.library.exception.AuthorContainsBookException;
+import com.example.library.exception.AuthorDoesntContainsBookException;
 import com.example.library.exception.AuthorNotFoundException;
 import com.example.library.exception.BookNotFoundException;
 import com.example.library.model.Actuality;
-import com.example.library.model.Book;
 import com.example.library.repository.AuthorRepository;
 import com.example.library.repository.BookRepository;
-import com.example.library.service.AuthorService;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -36,7 +34,6 @@ public class LibraryRestController {
     private ModelMapper modelMapper;
     private AuthorRepository authorRepository;
     private BookRepository bookRepository;
-    private AuthorService authorService;
     @GetMapping("/authors")
     public List<AuthorDto> findAll() {
         return authorRepository.findAllByActuality(Actuality.ACTIVE).stream().map(author -> modelMapper.map(author, AuthorDto.class)).toList();
@@ -77,27 +74,21 @@ public class LibraryRestController {
 
     @PostMapping("/authors/{id}")
     public BookDto addBook(@PathVariable Long id, @RequestBody @Valid BookDto dto) throws AuthorContainsBookException {
-//        if(bookRepository.checkIfAuthorContainsBookByTitle(id, dto.getTitle()).isPresent()) {
-//            throw new AuthorContainsBookException();
-//        }
-//        var author = authorRepository.findAuthorByIdAndActuality(id, Actuality.ACTIVE).orElseThrow(() -> new AuthorNotFoundException(id));
-//        //var book = bookRepository.findUsedBookByTitle(dto.getTitle()).orElse(dto.toBook());
-//        author.addBook(dto.toBook());
-//        return modelMapper.map(new LinkedList<Book> (authorRepository.save(author).getBooks()).getLast(), BookDto.class);
-        return null;
+        var author = authorRepository.findAuthorByIdAndActuality(id, Actuality.ACTIVE)
+                .orElseThrow(() -> new AuthorNotFoundException(id));
+        author.addBook(dto.toBook());
+        return modelMapper.map(authorRepository.save(author).getBooks().stream().filter(e -> e.equals(dto.toBook())).toList().get(0), BookDto.class);
     }
 
     @PatchMapping("/authors/{id}/books")
     public BookDto changeBook(@PathVariable Long id, @RequestBody @Valid BookDto dto) {
-//        if(bookRepository.checkIfAuthorContainsBookByTitle(id, dto.getTitle()).isPresent()) {
-//            throw new AuthorContainsBookException();
-//        }
-//        var author = authorRepository.findAuthorByIdAndActuality(id, Actuality.ACTIVE).orElseThrow(() -> new AuthorNotFoundException(id));
-//        var book = bookRepository.findBookByTitle(dto.getTitle()).orElse(dto.toBook());
-//        book.setDescription(dto.getDescription());
-//        author.addBook(book);
-//        return modelMapper.map(new LinkedList<Book> (authorRepository.save(author).getBooks()).getLast(), BookDto.class);
-        return null;
+        if(bookRepository.checkIfAuthorContainsBookById(id, dto.getId()).isEmpty()) {
+            throw new AuthorDoesntContainsBookException();
+        }
+        var changed = bookRepository.findById(dto.getId()).orElseThrow(() -> new BookNotFoundException(dto.getId()));
+        changed.setTitle(dto.getTitle());
+        changed.setDescription(dto.getDescription());
+        return modelMapper.map(bookRepository.save(changed), BookDto.class);
     }
 
     @DeleteMapping("/authors/{authorsId}/books/{bookId}")

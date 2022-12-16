@@ -5,7 +5,6 @@ import com.example.library.exception.AuthorNotFoundException;
 import com.example.library.model.Actuality;
 import com.example.library.repository.AuthorRepository;
 import com.example.library.repository.BookRepository;
-import com.example.library.service.AuthorService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

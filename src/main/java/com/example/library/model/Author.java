@@ -2,6 +2,7 @@ package com.example.library.model;
 
 
 import com.example.library.exception.AuthorContainsBookException;
+import com.example.library.exception.AuthorDoesntContainsBookException;
 import com.example.library.exception.BookNotFoundException;
 import lombok.*;
 
@@ -44,7 +45,7 @@ public class Author {
         if(books != null && books.contains(book)){
             books.remove(book);
         } else {
-            throw new BookNotFoundException(book.getId());
+            throw new AuthorDoesntContainsBookException();
         }
     }
 }
