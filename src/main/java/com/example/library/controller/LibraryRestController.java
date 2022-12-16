@@ -1,6 +1,7 @@
 package com.example.library.controller;
 
 import java.util.List;
+import java.util.Objects;
 
 import javax.validation.Valid;
 
@@ -81,7 +82,14 @@ public class LibraryRestController {
 
     @PatchMapping("/authors/{id}/books")
     public BookDto changeBook(@PathVariable Long id, @RequestBody @Valid BookDto dto) {
-        var changed = bookRepository.checkIfAuthorContainsBookById(id, dto.getId()).orElseThrow(AuthorDoesntContainsBookException::new);
+        var books = bookRepository.checkIdAuthorContainsBooksWithSameTitle(id, dto.getTitle());
+        if(books.size() == 0) {
+            throw new BookNotFoundException(dto.getId());
+        }
+        if(books.size() > 1 || !books.get(0).getId().equals(dto.getId())) {
+            throw new AuthorContainsBookException();
+        }
+        var changed = books.get(0);
         changed.setTitle(dto.getTitle());
         changed.setDescription(dto.getDescription());
         return modelMapper.map(bookRepository.save(changed), BookDto.class);

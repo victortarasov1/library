@@ -28,14 +28,11 @@ public class Book {
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
 		Book book = (Book) o;
-		return title.equals(book.title) && description.equals(book.description);
+		return title.equals(book.title);
 	}
 
 	@Override
 	public int hashCode() {
-		var hash = 7;
-		hash += 7 + 31 * (title != null ? title.hashCode() : 0);
-		hash += 7 + 31 * (description != null ? description.hashCode() : 0);
-		return hash;
+		return Objects.hash(title);
 	}
 }
