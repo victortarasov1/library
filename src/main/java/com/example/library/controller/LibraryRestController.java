@@ -56,7 +56,7 @@ public class LibraryRestController {
     }
 
 
-    @PostMapping("/authors")
+    @PostMapping
     public AuthorDto addAuthor(@RequestBody @Valid AuthorFullDto dto) {
         if (authorRepository.findEqualsAuthors(dto.getEmail(), dto.getName(), dto.getSecondName(), 0L).isPresent()) {
             throw new AuthorNotUniqueException();

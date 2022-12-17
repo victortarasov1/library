@@ -1,17 +1,14 @@
 import './App.css';
 import {Routes, Route} from 'react-router-dom';
-import AuthorsList from './Components/AuthorsList';
-import BooksList from './Components/BooksList';
+import AuthorList from './Components/AuthorList';
 function App() {
   return (
     <div className="App">
       <header className = "App-header">
         <a href = "/"> authors </a>
-        <a href = "/books"> books </a>
       </header>
       <Routes>
-        <Route path = "/" element = {  <AuthorsList/>}/>
-        <Route path = "/books" element = {  <BooksList/>}/>
+        <Route path = "/" element = {  <AuthorList/>}/>
       </Routes>
     </div>
   );
