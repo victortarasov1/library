@@ -46,12 +46,12 @@ export default class AuthorService {
         window.location.reload(false);
     };
 
-    static async save(firstName, lastName, email, password, age) {
+    static async save(name, secondName, email, password, age) {
         try {
             const requestOptions = {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({firstName, lastName, email, password, age})
+                body: JSON.stringify({name, secondName, email, password, age})
             };
             const response = await fetch('http://localhost:8080/library', requestOptions);
             return await response.json();
@@ -60,7 +60,7 @@ export default class AuthorService {
         }
     };
 
-    static async change(firstName, lastName, email, password, age, tokens) {
+    static async change(name, secondName, email, password, age, tokens) {
         try {
             const requestOptions = {
                 method: 'PATCH',
@@ -68,7 +68,7 @@ export default class AuthorService {
                     'Content-Type': 'application/json',
                     'Authorization': 'Bearer ' + tokens.access_token
                 },
-                body: JSON.stringify({firstName, lastName, email, password, age})
+                body: JSON.stringify({name, secondName, email, password, age})
             };
             const response = await fetch('http://localhost:8080/library/authors', requestOptions);
             return await response.json();

@@ -36,8 +36,8 @@ const AuthorList = () => {
                         <div>
                             {authors.map(author =>
                                 <div className="participant_item">
-                                    <h1> {author.firstName} </h1>
-                                    <h1> {author.lastName} </h1>
+                                    <h1> {author.name} </h1>
+                                    <h1> {author.secondName} </h1>
                                 </div>
                             )}
                         </div>
