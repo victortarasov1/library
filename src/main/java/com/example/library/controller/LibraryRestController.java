@@ -5,10 +5,7 @@ import java.util.Objects;
 
 import javax.validation.Valid;
 
-import com.example.library.exception.AuthorContainsBookException;
-import com.example.library.exception.AuthorDoesntContainsBookException;
-import com.example.library.exception.AuthorNotFoundException;
-import com.example.library.exception.BookNotFoundException;
+import com.example.library.exception.*;
 import com.example.library.model.Actuality;
 import com.example.library.repository.AuthorRepository;
 import com.example.library.repository.BookRepository;
@@ -60,7 +57,7 @@ public class LibraryRestController {
     @PostMapping("/authors")
     public AuthorDto addAuthor(@RequestBody @Valid AuthorDto dto) {
         if(authorRepository.findEqualsAuthors(dto.getEmail(), dto.getName(), dto.getSecondName(), 0L).isPresent()) {
-            throw new RuntimeException("This author is already setted!");
+            throw new AuthorNotUniqueException();
         }
         var author = dto.toAuthor();
         return modelMapper.map(authorRepository.save(author), AuthorDto.class);
