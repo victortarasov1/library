@@ -49,6 +49,9 @@ public class LibraryRestController {
         author.setAge(dto.getAge());
         author.setSecondName(dto.getSecondName());
         author.setName(dto.getName());
+        if(authorRepository.findEqualsAuthors(author.getEmail(), author.getName(), author.getSecondName(), author.getId()).isPresent()) {
+            throw new AuthorNotUniqueException();
+        }
         var updated = authorRepository.save(author);
         return modelMapper.map(updated, AuthorDto.class);
 
