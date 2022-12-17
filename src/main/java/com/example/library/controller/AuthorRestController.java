@@ -36,11 +36,6 @@ public class AuthorRestController {
         return modelMapper.map(author, AuthorFullDto.class);
     }
     @PreAuthorize("hasRole('ROLE_USER')")
-    @GetMapping("/books")
-    public List<BookDto> getAuthorBooks(Principal principal) {
-        return bookRepository.getBooksByAuthorEmail(principal.getName()).stream().map(book -> modelMapper.map(book, BookDto.class)).toList();
-    }
-    @PreAuthorize("hasRole('ROLE_USER')")
     @PatchMapping
     public AuthorFullDto changeAuthor(Principal principal, @RequestBody @Valid AuthorFullDto dto) {
         var author = authorRepository.findAuthorByEmailAndActuality(dto.getEmail(), Actuality.ACTIVE)

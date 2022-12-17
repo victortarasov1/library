@@ -20,11 +20,16 @@ public class RestExceptionHandler {
 	/*
 	 * handle exceptions on Service - layer
 	 */
-	@ExceptionHandler({AuthorNotFoundException.class, BookNotFoundException.class, AuthorContainsBookException.class, AuthorDoesntContainsBookException.class, AuthorNotUniqueException.class})
+	@ExceptionHandler({AuthorNotFoundException.class, BookNotFoundException.class})
     protected ResponseEntity<Object> handleEntityNotFoundEx(RuntimeException ex, WebRequest request) {
       ApiError apiError = new ApiError("entity not found exception", ex.getMessage());
       return new ResponseEntity<>(apiError, HttpStatus.NOT_FOUND);
     }
+	@ExceptionHandler({AuthorContainsBookException.class, AuthorDoesntContainsBookException.class, AuthorNotUniqueException.class})
+	protected ResponseEntity<Object> handleDataNotAcceptableEx(RuntimeException ex) {
+		ApiError apiError = new ApiError("This data is not acceptable!", ex.getMessage());
+		return new ResponseEntity<>(apiError, HttpStatus.NOT_ACCEPTABLE);
+	}
 	/*
 	 * handle validation messages
 	 * 

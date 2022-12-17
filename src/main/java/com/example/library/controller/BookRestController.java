@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.security.Principal;
+import java.util.List;
 
 @RestController
 @RequestMapping("/library/books")
@@ -23,6 +24,11 @@ public class BookRestController {
     private final ModelMapper modelMapper;
     private final AuthorRepository authorRepository;
     private final BookRepository bookRepository;
+    @PreAuthorize("hasRole('ROLE_USER')")
+    @GetMapping
+    public List<BookDto> getAuthorBooks(Principal principal) {
+        return bookRepository.getBooksByAuthorEmail(principal.getName()).stream().map(book -> modelMapper.map(book, BookDto.class)).toList();
+    }
 
     @PreAuthorize("hasRole('ROLE_USER')")
     @PostMapping
