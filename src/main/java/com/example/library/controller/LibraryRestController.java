@@ -69,10 +69,11 @@ public class LibraryRestController {
         return modelMapper.map(bookRepository.save(changed), BookDto.class);
     }
 
-    @DeleteMapping("/authors/{authorsId}/books/{bookId}")
-    public String deleteBook(@PathVariable Long authorsId, @PathVariable Long bookId) {
-        var author = authorRepository.findAuthorByIdAndActuality(authorsId, Actuality.ACTIVE).orElseThrow(() -> new AuthorNotFoundException(authorsId));
-        var book = bookRepository.findById(bookId).orElseThrow(() -> new BookNotFoundException(bookId));
+    @PreAuthorize("hasRole('ROLE_USER')")
+    @DeleteMapping("/books/{id}")
+    public String deleteBook(Principal principal, @PathVariable Long id) {
+        var author = authorRepository.findAuthorByEmailAndActuality(principal.getName(), Actuality.ACTIVE).orElseThrow(() -> new AuthorNotFoundException(principal.getName()));
+        var book = bookRepository.checkIfAuthorContainsBookById(id, principal.getName()).orElseThrow(() -> new BookNotFoundException(id));
         author.removeBook(book);
         authorRepository.save(author);
         return "deleted";
