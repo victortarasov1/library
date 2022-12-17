@@ -47,37 +47,6 @@ public class LibraryRestController {
         return modelMapper.map(authorRepository.save(author), AuthorDto.class);
     }
 
-    @PreAuthorize("hasRole('ROLE_USER')")
-    @PostMapping("/books")
-    public BookDto addBook(Principal principal, @RequestBody @Valid BookDto dto) throws AuthorContainsBookException {
-        var author = authorRepository.findAuthorByEmailAndActuality(principal.getName(), Actuality.ACTIVE)
-                .orElseThrow(() -> new AuthorNotFoundException(principal.getName()));
-        author.addBook(dto.toBook());
-        return modelMapper.map(authorRepository.save(author).getBooks().stream().filter(e -> e.equals(dto.toBook())).toList().get(0), BookDto.class);
-    }
-    @PreAuthorize("hasRole('ROLE_USER')")
-    @PatchMapping("/books")
-    public BookDto changeBook(Principal principal, @RequestBody @Valid BookDto dto) {
-        var books = bookRepository.checkIdAuthorContainsBooksWithSameTitle(principal.getName(), dto.getId(), dto.getTitle());
-        if (books.size() > 1) {
-            throw new AuthorContainsBookException();
-        }
-        var changed = bookRepository.checkIfAuthorContainsBookById(dto.getId(), principal.getName())
-                .orElseThrow(AuthorDoesntContainsBookException::new);
-        changed.setTitle(dto.getTitle());
-        changed.setDescription(dto.getDescription());
-        return modelMapper.map(bookRepository.save(changed), BookDto.class);
-    }
-
-    @PreAuthorize("hasRole('ROLE_USER')")
-    @DeleteMapping("/books/{id}")
-    public String deleteBook(Principal principal, @PathVariable Long id) {
-        var author = authorRepository.findAuthorByEmailAndActuality(principal.getName(), Actuality.ACTIVE).orElseThrow(() -> new AuthorNotFoundException(principal.getName()));
-        var book = bookRepository.checkIfAuthorContainsBookById(id, principal.getName()).orElseThrow(() -> new BookNotFoundException(id));
-        author.removeBook(book);
-        authorRepository.save(author);
-        return "deleted";
-    }
 
     @GetMapping("/books")
     public List<BookDto> getBooks() {
