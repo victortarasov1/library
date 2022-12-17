@@ -13,7 +13,6 @@ import lombok.Setter;
 @Getter @Setter
 @NoArgsConstructor @AllArgsConstructor
 public class AuthorDto {
-	private Long id;
 	@Size(min = 1, max = 15, message = "first name must be setted")
 	private String name;
 	@Size(min = 1, max = 15, message = "second name must be setted")

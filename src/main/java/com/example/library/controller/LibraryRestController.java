@@ -1,7 +1,7 @@
 package com.example.library.controller;
 
+import java.security.Principal;
 import java.util.List;
-import java.util.Objects;
 
 import javax.validation.Valid;
 
@@ -11,7 +11,7 @@ import com.example.library.repository.AuthorRepository;
 import com.example.library.repository.BookRepository;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -31,21 +31,21 @@ public class LibraryRestController {
     private final ModelMapper modelMapper;
     private final AuthorRepository authorRepository;
     private final BookRepository bookRepository;
-    @GetMapping("/authors")
+    @GetMapping
     public List<AuthorDto> findAll() {
         return authorRepository.findAllByActuality(Actuality.ACTIVE).stream().map(author -> modelMapper.map(author, AuthorDto.class)).toList();
     }
 
-
-    @GetMapping("/authors/{id}")
-    public List<BookDto> findById(@PathVariable Long id) {
-        return bookRepository.getBooksByAuthorId(id).stream().map(book -> modelMapper.map(book, BookDto.class)).toList();
+    @PreAuthorize("hasRole('ROLE_USER')")
+    @GetMapping("/authors")
+    public List<BookDto> getAuthorBooks(Principal principal) {
+        return bookRepository.getBooksByAuthorEmail(principal.getName()).stream().map(book -> modelMapper.map(book, BookDto.class)).toList();
     }
-
+    @PreAuthorize("hasRole('ROLE_USER')")
     @PatchMapping("/authors")
-    public AuthorDto changeAuthor(@RequestBody @Valid AuthorDto dto) {
-        var author = authorRepository.findAuthorByIdAndActuality(dto.getId(), Actuality.ACTIVE)
-                .orElseThrow(() -> new AuthorNotFoundException(dto.getId()));
+    public AuthorDto changeAuthor(Principal principal, @RequestBody @Valid AuthorDto dto) {
+        var author = authorRepository.findAuthorByEmailAndActuality(dto.getEmail(), Actuality.ACTIVE)
+                .orElseThrow(() -> new AuthorNotFoundException(principal.getName()));
         author.setAge(dto.getAge());
         author.setSecondName(dto.getSecondName());
         author.setName(dto.getName());
@@ -65,10 +65,10 @@ public class LibraryRestController {
         var author = dto.toAuthor();
         return modelMapper.map(authorRepository.save(author), AuthorDto.class);
     }
-
-    @DeleteMapping("/authors/{id}")
-    public String deleteAuthorById(@PathVariable Long id) {
-        var author = authorRepository.findAuthorByIdAndActuality(id, Actuality.ACTIVE).orElseThrow(() -> new AuthorNotFoundException(id));
+    @PreAuthorize("hasRole('ROLE_USER')")
+    @DeleteMapping("/authors")
+    public String deleteAuthorById(Principal principal) {
+        var author = authorRepository.findAuthorByEmailAndActuality(principal.getName(), Actuality.ACTIVE).orElseThrow(() -> new AuthorNotFoundException(principal.getName()));
         author.setActuality(Actuality.REMOVED);
         authorRepository.save(author);
         return "deleted";
