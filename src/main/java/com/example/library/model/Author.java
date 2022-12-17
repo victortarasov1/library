@@ -29,6 +29,12 @@ public class Author {
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<Book> books;
 
+    @Column(name = "role")
+    private Role role;
+
+    private String password;
+    private String email;
+
     public void addBook(Book book) {
         if(books != null) {
             if(books.contains(book)) {
