@@ -3,7 +3,7 @@ package com.example.library.controller;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.example.library.exception.AuthorContainsBookException;
+import com.example.library.exception.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -13,8 +13,6 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.NoHandlerFoundException;
-import com.example.library.exception.AuthorNotFoundException;
-import com.example.library.exception.BookNotFoundException;
 import com.example.library.model.ApiError;
 
 @RestControllerAdvice
@@ -22,7 +20,7 @@ public class RestExceptionHandler {
 	/*
 	 * handle exceptions on Service - layer
 	 */
-	@ExceptionHandler({AuthorNotFoundException.class, BookNotFoundException.class, AuthorContainsBookException.class})
+	@ExceptionHandler({AuthorNotFoundException.class, BookNotFoundException.class, AuthorContainsBookException.class, AuthorDoesntContainsBookException.class, AuthorNotUniqueException.class})
     protected ResponseEntity<Object> handleEntityNotFoundEx(RuntimeException ex, WebRequest request) {
       ApiError apiError = new ApiError("entity not found exception", ex.getMessage());
       return new ResponseEntity<>(apiError, HttpStatus.NOT_FOUND);
