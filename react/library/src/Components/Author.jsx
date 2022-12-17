@@ -6,8 +6,8 @@ import LoginService from '../API/LoginService';
 import EventList from './EventList';
 import Loader from "../UI/Loader/Loader";
 
-const Participant = ({tokens, setTokens, setModal}) => {
-    const [participant, setParticipant] = useState('');
+const Author = ({tokens, setTokens, setModal}) => {
+    const [author, setAuthor] = useState('');
     const [show, setShow] = useState(false);
     const [events, setEvents] = useState(false);
     const [loading, setLoading] = useState(false);
@@ -45,7 +45,7 @@ const Participant = ({tokens, setTokens, setModal}) => {
         if (response.hasError) {
             setModal(false);
         }
-        setParticipant(response);
+        setAuthor(response);
     };
     return (
         <div>
@@ -56,13 +56,14 @@ const Participant = ({tokens, setTokens, setModal}) => {
             ) : (
                 <div className="participant_item">
                     <div style={{textAlign: 'left'}}>
-                        <h1> {participant.firstName} </h1>
-                        <h1> {participant.lastName} </h1>
+                        <h1> {author.name} </h1>
+                        <h1> {author.secondName} </h1>
+                        <h1> {author.age} </h1>
                     </div>
-                    <h3> {participant.email} </h3>
+                    <h3> {author.email} </h3>
                     <div style={{textAlign: 'center'}}>
                         <Modal show={show} onHide={setShow}> <AuthorForm CreateOrUpdate={change}
-                                                                         participant={participant}
+                                                                         author={author}
                                                                          tokens={tokens}
                                                                          setTokens={setTokens}/></Modal>
                         {
@@ -87,4 +88,4 @@ const Participant = ({tokens, setTokens, setModal}) => {
         </div>
     );
 };
-export default Participant;
+export default Author;

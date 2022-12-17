@@ -12,8 +12,8 @@ const AuthorForm = ({author, CreateOrUpdate, tokens, setTokens}) => {
     const [password, setPassword] = useState('');
     useEffect(() => {
         if (author) {
-            setName(author.firstName);
-            setSecondName(author.lastName);
+            setName(author.name);
+            setSecondName(author.secondName);
             setEmail(author.email);
             setAge(author.age);
         }

@@ -10,7 +10,7 @@ export default class AuthorService {
 
     static async getParticipant(access_token) {
         try {
-            const response = await fetch('http://localhost:8080/calendar/user', {
+            const response = await fetch('http://localhost:8080/library/authors', {
                 method: 'GET',
                 mode: 'cors',
                 headers: {
@@ -36,7 +36,7 @@ export default class AuthorService {
                     'Authorization': 'Bearer ' + tokens.access_token
                 }
             };
-            const response = await fetch('http://localhost:8080/calendar/user', requestOptions);
+            const response = await fetch('http://localhost:8080/library/authors', requestOptions);
             if (response.status !== 200) {
                 return {hasError: true}
             }

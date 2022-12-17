@@ -42,7 +42,7 @@ public class AuthorRestController {
     @PreAuthorize("hasRole('ROLE_USER')")
     @PatchMapping
     public AuthorFullDto changeAuthor(Principal principal, @RequestBody @Valid AuthorFullDto dto) {
-        var author = authorRepository.findAuthorByEmailAndActuality(dto.getEmail(), Actuality.ACTIVE)
+        var author = authorRepository.findAuthorByEmailAndActuality(principal.getName(), Actuality.ACTIVE)
                 .orElseThrow(() -> new AuthorNotFoundException(principal.getName()));
         author.setAge(dto.getAge());
         author.setSecondName(dto.getSecondName());
