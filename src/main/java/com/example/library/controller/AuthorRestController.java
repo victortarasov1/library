@@ -1,6 +1,7 @@
 package com.example.library.controller;
 
 import com.example.library.dto.AuthorDto;
+import com.example.library.dto.AuthorFullDto;
 import com.example.library.dto.BookDto;
 import com.example.library.exception.AuthorNotFoundException;
 import com.example.library.exception.AuthorNotUniqueException;
@@ -23,14 +24,23 @@ public class AuthorRestController {
     private final ModelMapper modelMapper;
     private final AuthorRepository authorRepository;
     private final BookRepository bookRepository;
+
     @PreAuthorize("hasRole('ROLE_USER')")
     @GetMapping
+    public AuthorFullDto getAuthor(Principal principal) {
+        var author = authorRepository.findAuthorByEmailAndActuality(principal.getName(), Actuality.ACTIVE)
+                .orElseThrow(() -> new AuthorNotFoundException(principal.getName()));
+        author.setPassword(null);
+        return modelMapper.map(author, AuthorFullDto.class);
+    }
+    @PreAuthorize("hasRole('ROLE_USER')")
+    @GetMapping("/books")
     public List<BookDto> getAuthorBooks(Principal principal) {
         return bookRepository.getBooksByAuthorEmail(principal.getName()).stream().map(book -> modelMapper.map(book, BookDto.class)).toList();
     }
     @PreAuthorize("hasRole('ROLE_USER')")
     @PatchMapping
-    public AuthorDto changeAuthor(Principal principal, @RequestBody @Valid AuthorDto dto) {
+    public AuthorFullDto changeAuthor(Principal principal, @RequestBody @Valid AuthorFullDto dto) {
         var author = authorRepository.findAuthorByEmailAndActuality(dto.getEmail(), Actuality.ACTIVE)
                 .orElseThrow(() -> new AuthorNotFoundException(principal.getName()));
         author.setAge(dto.getAge());
@@ -40,7 +50,8 @@ public class AuthorRestController {
             throw new AuthorNotUniqueException();
         }
         var updated = authorRepository.save(author);
-        return modelMapper.map(updated, AuthorDto.class);
+        updated.setPassword(null);
+        return modelMapper.map(updated, AuthorFullDto.class);
 
     }
     @PreAuthorize("hasRole('ROLE_USER')")
