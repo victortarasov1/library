@@ -26,7 +26,11 @@ public class AuthorRestController {
     private final AuthorRepository authorRepository;
     private final BookRepository bookRepository;
     private final PasswordEncoder encoder;
-
+    @PreAuthorize("hasRole('ROLE_USER')")
+    @GetMapping("/books")
+    public List<BookDto> getAuthorBooks(Principal principal) {
+        return bookRepository.getBooksByAuthorEmail(principal.getName()).stream().map(book -> modelMapper.map(book, BookDto.class)).toList();
+    }
     @PreAuthorize("hasRole('ROLE_USER')")
     @GetMapping
     public AuthorFullDto getAuthor(Principal principal) {
