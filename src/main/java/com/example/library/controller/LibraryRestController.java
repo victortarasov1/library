@@ -59,6 +59,9 @@ public class LibraryRestController {
 
     @PostMapping("/authors")
     public AuthorDto addAuthor(@RequestBody @Valid AuthorDto dto) {
+        if(authorRepository.findEqualsAuthors(dto.getEmail(), dto.getName(), dto.getSecondName(), 0L).isPresent()) {
+            throw new RuntimeException("This author is already setted!");
+        }
         var author = dto.toAuthor();
         return modelMapper.map(authorRepository.save(author), AuthorDto.class);
     }
