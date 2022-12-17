@@ -6,11 +6,11 @@ function App() {
   return (
     <div className="App">
       <header className = "App-header">
-        <a href = "/authors"> authors </a>
+        <a href = "/"> authors </a>
         <a href = "/books"> books </a>
       </header>
       <Routes>
-        <Route path = "/authors" element = {  <AuthorsList/>}/>
+        <Route path = "/" element = {  <AuthorsList/>}/>
         <Route path = "/books" element = {  <BooksList/>}/>
       </Routes>
     </div>

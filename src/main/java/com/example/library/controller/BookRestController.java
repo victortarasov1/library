@@ -62,11 +62,10 @@ public class BookRestController {
 
     @PreAuthorize("hasRole('ROLE_USER')")
     @DeleteMapping("/{id}")
-    public String deleteBook(Principal principal, @PathVariable Long id) {
+    public void deleteBook(Principal principal, @PathVariable Long id) {
         var author = authorRepository.findAuthorByEmailAndActuality(principal.getName(), Actuality.ACTIVE).orElseThrow(() -> new AuthorNotFoundException(principal.getName()));
         var book = bookRepository.checkIfAuthorContainsBookById(id, principal.getName()).orElseThrow(() -> new BookNotFoundException(id));
         author.removeBook(book);
         authorRepository.save(author);
-        return "deleted";
     }
 }

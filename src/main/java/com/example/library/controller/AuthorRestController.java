@@ -59,10 +59,9 @@ public class AuthorRestController {
     }
     @PreAuthorize("hasRole('ROLE_USER')")
     @DeleteMapping
-    public String deleteAuthorById(Principal principal) {
+    public void deleteAuthorById(Principal principal) {
         var author = authorRepository.findAuthorByEmailAndActuality(principal.getName(), Actuality.ACTIVE).orElseThrow(() -> new AuthorNotFoundException(principal.getName()));
         author.setActuality(Actuality.REMOVED);
         authorRepository.save(author);
-        return "deleted";
     }
 }
