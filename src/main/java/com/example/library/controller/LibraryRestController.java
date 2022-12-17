@@ -29,7 +29,6 @@ import com.example.library.dto.BookDto;
 
 @RestController
 @RequestMapping("/library")
-@CrossOrigin(origins = "*")
 @AllArgsConstructor
 public class LibraryRestController {
     private ModelMapper modelMapper;
