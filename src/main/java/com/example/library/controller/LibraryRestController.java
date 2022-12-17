@@ -36,26 +36,7 @@ public class LibraryRestController {
         return authorRepository.findAllByActuality(Actuality.ACTIVE).stream().map(author -> modelMapper.map(author, AuthorDto.class)).toList();
     }
 
-    @PreAuthorize("hasRole('ROLE_USER')")
-    @GetMapping("/authors")
-    public List<BookDto> getAuthorBooks(Principal principal) {
-        return bookRepository.getBooksByAuthorEmail(principal.getName()).stream().map(book -> modelMapper.map(book, BookDto.class)).toList();
-    }
-    @PreAuthorize("hasRole('ROLE_USER')")
-    @PatchMapping("/authors")
-    public AuthorDto changeAuthor(Principal principal, @RequestBody @Valid AuthorDto dto) {
-        var author = authorRepository.findAuthorByEmailAndActuality(dto.getEmail(), Actuality.ACTIVE)
-                .orElseThrow(() -> new AuthorNotFoundException(principal.getName()));
-        author.setAge(dto.getAge());
-        author.setSecondName(dto.getSecondName());
-        author.setName(dto.getName());
-        if(authorRepository.findEqualsAuthors(author.getEmail(), author.getName(), author.getSecondName(), author.getId()).isPresent()) {
-            throw new AuthorNotUniqueException();
-        }
-        var updated = authorRepository.save(author);
-        return modelMapper.map(updated, AuthorDto.class);
 
-    }
 
     @PostMapping("/authors")
     public AuthorDto addAuthor(@RequestBody @Valid AuthorDto dto) {
@@ -65,14 +46,7 @@ public class LibraryRestController {
         var author = dto.toAuthor();
         return modelMapper.map(authorRepository.save(author), AuthorDto.class);
     }
-    @PreAuthorize("hasRole('ROLE_USER')")
-    @DeleteMapping("/authors")
-    public String deleteAuthorById(Principal principal) {
-        var author = authorRepository.findAuthorByEmailAndActuality(principal.getName(), Actuality.ACTIVE).orElseThrow(() -> new AuthorNotFoundException(principal.getName()));
-        author.setActuality(Actuality.REMOVED);
-        authorRepository.save(author);
-        return "deleted";
-    }
+
 
     @PostMapping("/authors/{id}")
     public BookDto addBook(@PathVariable Long id, @RequestBody @Valid BookDto dto) throws AuthorContainsBookException {
