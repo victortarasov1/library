@@ -31,9 +31,9 @@ import com.example.library.dto.BookDto;
 @RequestMapping("/library")
 @AllArgsConstructor
 public class LibraryRestController {
-    private ModelMapper modelMapper;
-    private AuthorRepository authorRepository;
-    private BookRepository bookRepository;
+    private final ModelMapper modelMapper;
+    private final AuthorRepository authorRepository;
+    private final BookRepository bookRepository;
     @GetMapping("/authors")
     public List<AuthorDto> findAll() {
         return authorRepository.findAllByActuality(Actuality.ACTIVE).stream().map(author -> modelMapper.map(author, AuthorDto.class)).toList();
