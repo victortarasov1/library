@@ -55,14 +55,14 @@ public class LibraryRestController {
         author.addBook(dto.toBook());
         return modelMapper.map(authorRepository.save(author).getBooks().stream().filter(e -> e.equals(dto.toBook())).toList().get(0), BookDto.class);
     }
-
-    @PatchMapping("/authors/{id}/books")
-    public BookDto changeBook(@PathVariable Long id, @RequestBody @Valid BookDto dto) {
-        var books = bookRepository.checkIdAuthorContainsBooksWithSameTitle(id, dto.getId(), dto.getTitle());
+    @PreAuthorize("hasRole('ROLE_USER')")
+    @PatchMapping("/books")
+    public BookDto changeBook(Principal principal, @RequestBody @Valid BookDto dto) {
+        var books = bookRepository.checkIdAuthorContainsBooksWithSameTitle(principal.getName(), dto.getId(), dto.getTitle());
         if (books.size() > 1) {
             throw new AuthorContainsBookException();
         }
-        var changed = bookRepository.checkIfAuthorContainsBookById(dto.getId(), id)
+        var changed = bookRepository.checkIfAuthorContainsBookById(dto.getId(), principal.getName())
                 .orElseThrow(AuthorDoesntContainsBookException::new);
         changed.setTitle(dto.getTitle());
         changed.setDescription(dto.getDescription());
