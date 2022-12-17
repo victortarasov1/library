@@ -31,27 +31,27 @@ public class LibraryRestController {
     private final ModelMapper modelMapper;
     private final AuthorRepository authorRepository;
     private final BookRepository bookRepository;
+
     @GetMapping
     public List<AuthorDto> findAll() {
         return authorRepository.findAllByActuality(Actuality.ACTIVE).stream().map(author -> modelMapper.map(author, AuthorDto.class)).toList();
     }
 
 
-
     @PostMapping("/authors")
     public AuthorDto addAuthor(@RequestBody @Valid AuthorDto dto) {
-        if(authorRepository.findEqualsAuthors(dto.getEmail(), dto.getName(), dto.getSecondName(), 0L).isPresent()) {
+        if (authorRepository.findEqualsAuthors(dto.getEmail(), dto.getName(), dto.getSecondName(), 0L).isPresent()) {
             throw new AuthorNotUniqueException();
         }
         var author = dto.toAuthor();
         return modelMapper.map(authorRepository.save(author), AuthorDto.class);
     }
 
-
-    @PostMapping("/authors/{id}")
-    public BookDto addBook(@PathVariable Long id, @RequestBody @Valid BookDto dto) throws AuthorContainsBookException {
-        var author = authorRepository.findAuthorByIdAndActuality(id, Actuality.ACTIVE)
-                .orElseThrow(() -> new AuthorNotFoundException(id));
+    @PreAuthorize("hasRole('ROLE_USER')")
+    @PostMapping("/books")
+    public BookDto addBook(Principal principal, @RequestBody @Valid BookDto dto) throws AuthorContainsBookException {
+        var author = authorRepository.findAuthorByEmailAndActuality(principal.getName(), Actuality.ACTIVE)
+                .orElseThrow(() -> new AuthorNotFoundException(principal.getName()));
         author.addBook(dto.toBook());
         return modelMapper.map(authorRepository.save(author).getBooks().stream().filter(e -> e.equals(dto.toBook())).toList().get(0), BookDto.class);
     }
@@ -59,7 +59,7 @@ public class LibraryRestController {
     @PatchMapping("/authors/{id}/books")
     public BookDto changeBook(@PathVariable Long id, @RequestBody @Valid BookDto dto) {
         var books = bookRepository.checkIdAuthorContainsBooksWithSameTitle(id, dto.getId(), dto.getTitle());
-        if(books.size() > 1) {
+        if (books.size() > 1) {
             throw new AuthorContainsBookException();
         }
         var changed = bookRepository.checkIfAuthorContainsBookById(dto.getId(), id)
@@ -86,10 +86,10 @@ public class LibraryRestController {
     @GetMapping("/books/{id}")
     public List<AuthorDto> getAuthors(@PathVariable Long id) {
         var authors = authorRepository.getAuthorsOfBook(id);
-        if(authors == null) {
+        if (authors == null) {
             throw new BookNotFoundException(id);
         }
         return authors.stream().map(author -> modelMapper.map(author, AuthorDto.class)).toList();
     }
-    
+
 }
