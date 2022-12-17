@@ -11,6 +11,7 @@ import com.example.library.repository.BookRepository;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -24,6 +25,7 @@ public class AuthorRestController {
     private final ModelMapper modelMapper;
     private final AuthorRepository authorRepository;
     private final BookRepository bookRepository;
+    private final PasswordEncoder encoder;
 
     @PreAuthorize("hasRole('ROLE_USER')")
     @GetMapping
@@ -46,6 +48,8 @@ public class AuthorRestController {
         author.setAge(dto.getAge());
         author.setSecondName(dto.getSecondName());
         author.setName(dto.getName());
+        author.setEmail(dto.getEmail());
+        author.setPassword(encoder.encode(dto.getPassword()));
         if(authorRepository.findEqualsAuthors(author.getEmail(), author.getName(), author.getSecondName(), author.getId()).isPresent()) {
             throw new AuthorNotUniqueException();
         }

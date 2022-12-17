@@ -21,6 +21,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -42,6 +43,7 @@ public class LibraryRestController {
     private final ModelMapper modelMapper;
     private final AuthorRepository authorRepository;
     private final BookRepository bookRepository;
+    private final PasswordEncoder encoder;
     @Value("${jwt.secret.key}")
     private String SECRET_KEY;
 
@@ -49,8 +51,8 @@ public class LibraryRestController {
     private Integer ACCESS_TOKEN_TIME;
 
     @GetMapping
-    public List<AuthorFullDto> findAll() {
-        return authorRepository.findAllByActuality(Actuality.ACTIVE).stream().map(author -> modelMapper.map(author, AuthorFullDto.class)).toList();
+    public List<AuthorDto> findAll() {
+        return authorRepository.findAllByActuality(Actuality.ACTIVE).stream().map(author -> modelMapper.map(author, AuthorDto.class)).toList();
     }
 
 
@@ -60,6 +62,7 @@ public class LibraryRestController {
             throw new AuthorNotUniqueException();
         }
         var author = dto.toAuthor();
+        author.setPassword(encoder.encode(dto.getPassword()));
         return modelMapper.map(authorRepository.save(author), AuthorDto.class);
     }
 
