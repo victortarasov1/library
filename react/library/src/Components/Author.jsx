@@ -54,7 +54,7 @@ const Author = ({tokens, setTokens, setModal}) => {
                     <Loader/>
                 </div>
             ) : (
-                <div className="participant_item">
+                <div className="item">
                     <div style={{textAlign: 'left'}}>
                         <h1> {author.name} </h1>
                         <h1> {author.secondName} </h1>

@@ -11,7 +11,7 @@ const Book = ({tokens, setTokens, book, change, remove}) => {
         change(data);
     }
     return (
-        <div className="participant_item">
+        <div className="item">
             <h1> {book.description} </h1>
             <h1> {book.title} </h1>
 

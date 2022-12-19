@@ -31,11 +31,11 @@ const AuthorList = () => {
                     <Loader/>
                 </div>
             ) : (
-                <div className="participant_list">
+                <div className="list">
                     {authors.length ? (
                         <div>
                             {authors.map(author =>
-                                <div className="participant_item">
+                                <div className="item">
                                     <h1> {author.name} </h1>
                                     <h1> {author.secondName} </h1>
                                 </div>

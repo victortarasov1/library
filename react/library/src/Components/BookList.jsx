@@ -71,7 +71,7 @@ const EventList = ({tokens, setTokens}) => {
                     <Loader/>
                 </div>
             ) : (
-                <div className="participant_list">
+                <div className="list">
                     {
                         books.length ? (
                             <div>
