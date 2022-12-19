@@ -1,14 +1,14 @@
 import {Button, Form} from 'react-bootstrap';
 import React, {useState} from 'react';
 import Input from '../UI/Input/Input';
-import EventService from '../API/EventService';
+import BookService from '../API/BookService';
 import LoginService from '../API/LoginService';
 
 const EmailForm = ({tokens, setTokens, id, update}) => {
     const [email, setEmail] = useState('');
     const add = (e) => {
         e.preventDefault();
-        EventService.addParticipant(tokens, id, email).then(data => {
+        BookService.addAuthor(tokens, id, email).then(data => {
             if (data.error_message) {
                 LoginService.refresh(tokens).then(refresh => {
                     if (refresh.hasError) {
@@ -16,7 +16,7 @@ const EmailForm = ({tokens, setTokens, id, update}) => {
                     } else {
                         setTokens(refresh, tokens.refresh_token);
                         console.log(refresh);
-                        EventService.addParticipant(refresh, id, email).then(d => {
+                        BookService.addAuthor(refresh, id, email).then(d => {
                             validation(d);
                         })
                     }

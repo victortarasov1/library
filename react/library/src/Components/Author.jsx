@@ -3,7 +3,7 @@ import AuthorService from '../API/AuthorService';
 import {Button, Modal} from 'react-bootstrap';
 import AuthorForm from './AuthorForm';
 import LoginService from '../API/LoginService';
-import EventList from './EventList';
+import BookList from './BookList';
 import Loader from "../UI/Loader/Loader";
 
 const Author = ({tokens, setTokens, setModal}) => {
@@ -70,14 +70,14 @@ const Author = ({tokens, setTokens, setModal}) => {
                             events ?
                                 (
                                     <>
-                                        <EventList tokens={tokens} setTokens={setTokens}/>
+                                        <BookList tokens={tokens} setTokens={setTokens}/>
                                         <Button variant="dark" onClick={() => setEvents(false)}> close </Button>
                                     </>
                                 ) : (
                                     <>
                                         <Button onClick={() => setShow(true)}> change </Button>
                                         <Button variant="danger" onClick={() => remove()}> delete </Button>
-                                        <Button onClick={() => setEvents(true)}> events </Button>
+                                        <Button onClick={() => setEvents(true)}> books </Button>
                                         <br/>
                                     </>
                                 )

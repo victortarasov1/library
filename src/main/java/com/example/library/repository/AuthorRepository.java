@@ -22,5 +22,8 @@ public interface AuthorRepository extends JpaRepository<Author, Long>{
 
     @Query(value = "select a from Author a where a.email = ?1 and a.name = ?2 and a.secondName = ?3 and a.id <> ?4")
     Optional<Author> findEqualsAuthors(String email, String name, String secondName, Long id);
+
+    @Query(value = "select * from books join authors_books ab on books.id = ab.books_id and books.id = ?2 join authors a on a.id = ab.authors_id and a.email != ?1 and a.actuality = 0", nativeQuery = true)
+    List<Author> getAnotherBookAuthors(String email, Long bookId);
 }
 

@@ -1,25 +1,25 @@
 import React, {useState, useEffect} from 'react';
-import EventService from '../API/EventService';
+import BookService from '../API/BookService';
 import {Button, Modal} from 'react-bootstrap';
-import Event from './Event';
+import Book from './Book';
 import LoginService from '../API/LoginService';
-import EventForm from './EventForm';
+import BookForm from './BookForm';
 import Loader from '../UI/Loader/Loader';
 
 const EventList = ({tokens, setTokens}) => {
-    const [events, setEvents] = useState([]);
+    const [books, setBooks] = useState([]);
     const [modal, setModal] = useState(false);
     const [loading, setLoading] = useState(false);
     useEffect(() => {
         setLoading(true);
         setTimeout(() => {
-            fetchEvents();
+            fetchBooks();
             setLoading(false);
         }, 1000);
     }, []);
 
-    async function fetchEvents() {
-        const response = await EventService.get(tokens);
+    async function fetchBooks() {
+        const response = await BookService.get(tokens);
         if (response.error_message) {
             LoginService.refresh(tokens).then(refresh => {
                 if (refresh.hasError) {
@@ -27,27 +27,27 @@ const EventList = ({tokens, setTokens}) => {
                 } else {
                     setTokens(refresh, tokens.refresh_token);
                     console.log(refresh);
-                    EventService.get(refresh).then(d => {
-                        setEvents(d)
+                    BookService.get(refresh).then(d => {
+                        setBooks(d)
                     });
                 }
             });
         } else {
-            setEvents(response);
+            setBooks(response);
         }
     }
 
-    const add = (event) => {
-        setEvents([...events, event]);
+    const add = (book) => {
+        setBooks([...books, book]);
         setModal(false);
     };
 
-    const change = (event) => {
-        setEvents([...events.filter(e => e.id !== event.id), event])
+    const change = (book) => {
+        setBooks([...books.filter(e => e.id !== book.id), book])
     };
 
-    const remove = (event) => {
-        EventService.remove(tokens, event.id).then(data => {
+    const remove = (book) => {
+        BookService.remove(tokens, book.id).then(data => {
             if (data.hasError) {
                 alert("YARRR!")
                 LoginService.refresh(tokens).then(refresh => {
@@ -56,13 +56,13 @@ const EventList = ({tokens, setTokens}) => {
                     } else {
                         setTokens(refresh, tokens.refresh_token);
                         console.log(refresh);
-                        EventService.remove(refresh, event.id);
+                        BookService.remove(refresh, book.id);
                     }
                     ;
                 });
             }
         })
-        setEvents([...events.filter(e => e.id !== event.id)])
+        setBooks([...books.filter(e => e.id !== book.id)])
     }
     return (
         <div>
@@ -73,13 +73,13 @@ const EventList = ({tokens, setTokens}) => {
             ) : (
                 <div className="participant_list">
                     {
-                        events.length ? (
+                        books.length ? (
                             <div>
                                 {
-                                    events.map(event =>
+                                    books.map(book =>
                                         <div>
-                                            <Event tokens={tokens} setTokens={setTokens} event={event} change={change}
-                                                   remove={remove}/>
+                                            <Book tokens={tokens} setTokens={setTokens} book={book} change={change}
+                                                  remove={remove}/>
                                         </div>
                                     )
                                 }
@@ -90,9 +90,9 @@ const EventList = ({tokens, setTokens}) => {
                             </div>
                         )
                     }
-                    <Button onClick={() => setModal(true)}> add event</Button>
-                    <Modal show={modal} onHide={setModal}> <EventForm tokens={tokens} setTokens={setTokens}
-                                                                      CreateOrUpdate={add}/> </Modal>
+                    <Button onClick={() => setModal(true)}> add book</Button>
+                    <Modal show={modal} onHide={setModal}> <BookForm tokens={tokens} setTokens={setTokens}
+                                                                     CreateOrUpdate={add}/> </Modal>
                 </div>
             )}
         </div>

@@ -1,17 +1,16 @@
 import React, {useState, useEffect} from 'react';
 import {Form, Button} from 'react-bootstrap';
 import Input from '../UI/Input/Input';
-import EventService from '../API/EventService';
+import BookService from '../API/BookService';
 import LoginService from '../API/LoginService';
 
-const EventForm = ({tokens, setTokens, event, CreateOrUpdate}) => {
+const BookForm = ({tokens, setTokens, book, CreateOrUpdate}) => {
     const [id, setId] = useState('');
-    const [startTime, setStartTime] = useState('');
-    const [endTime, setEndTime] = useState('');
+    const[title, setTitle] = useState('');
     const [description, setDescription] = useState('');
     const update = (e) => {
         e.preventDefault();
-        EventService.change(tokens, id, description, startTime, endTime).then(data => {
+        BookService.change(tokens, id, description, title).then(data => {
             if (data.error_message) {
                 LoginService.refresh(tokens).then(refresh => {
                     if (refresh.hasError) {
@@ -19,7 +18,7 @@ const EventForm = ({tokens, setTokens, event, CreateOrUpdate}) => {
                     } else {
                         setTokens(refresh, tokens.refresh_token);
                         console.log(refresh);
-                        EventService.change(refresh, id, description, startTime, endTime).then(d => {
+                        BookService.change(refresh, id, description, title).then(d => {
                             alert("D");
                             validation(d);
                         })
@@ -33,7 +32,7 @@ const EventForm = ({tokens, setTokens, event, CreateOrUpdate}) => {
 
     const add = (e) => {
         e.preventDefault();
-        EventService.save(tokens, description, startTime, endTime).then(data => {
+        BookService.save(tokens, description,title).then(data => {
             if (data.error_message) {
                 LoginService.refresh(tokens).then(refresh => {
                     if (refresh.hasError) {
@@ -41,7 +40,7 @@ const EventForm = ({tokens, setTokens, event, CreateOrUpdate}) => {
                     } else {
                         setTokens(refresh, tokens.refresh_token);
                         console.log(refresh);
-                        EventService.save(refresh, description, startTime, endTime).then(d => {
+                        BookService.save(refresh, description, title).then(d => {
                             validation(d);
                         })
                     }
@@ -58,24 +57,21 @@ const EventForm = ({tokens, setTokens, event, CreateOrUpdate}) => {
     };
 
     useEffect(() => {
-        if (event) {
-            setId(event.id)
-            setDescription(event.description)
-            setStartTime(event.startTime)
-            setEndTime(event.endTime)
+        if (book) {
+            setId(book.id)
+            setDescription(book.description)
+            setTitle(book.title)
         }
     }, []);
 
     return (
-        <Form className="form" onSubmit={event ? update : add}>
-            <Input type="datetime-local" placeholder="startTime" value={startTime}
-                   onChange={e => setStartTime(e.target.value)}/>
-            <Input type="datetime-local" placeholder="endTime" value={endTime}
-                   onChange={e => setEndTime(e.target.value)}/>
+        <Form className="form" onSubmit={book ? update : add}>
+            <Input type="text" placeholder="title" value={title}
+                   onChange={e => setTitle(e.target.value)}/>
             <Input type="text" placeholder="description" value={description}
                    onChange={e => setDescription(e.target.value)}/>
-            <Button type="submit"> {event ? "update" : "create"} </Button>
+            <Button type="submit"> {book ? "update" : "create"} </Button>
         </Form>
     );
 };
-export default EventForm;
+export default BookForm;

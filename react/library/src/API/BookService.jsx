@@ -1,4 +1,4 @@
-export default class EventService {
+export default class BookService {
 
     static async get(tokens) {
         try {
@@ -9,7 +9,7 @@ export default class EventService {
                     'Authorization': 'Bearer ' + tokens.access_token
                 }
             };
-            const response = await fetch('http://localhost:8080/calendar/events', requestOptions);
+            const response = await fetch('http://localhost:8080/library/authors/books', requestOptions);
             return await response.json();
         } catch (e) {
             alert(e);
@@ -25,7 +25,7 @@ export default class EventService {
                     'Authorization': 'Bearer ' + tokens.access_token
                 }
             };
-            const response = await fetch('http://localhost:8080/calendar/events/' + id, requestOptions);
+            const response = await fetch('http://localhost:8080/library/books/' + id, requestOptions);
             if (response.status !== 200) {
                 return {hasError: true}
             }
@@ -34,7 +34,7 @@ export default class EventService {
         }
     };
 
-    static async change(tokens, id, description, startTime, endTime) {
+    static async change(tokens, id, description, title) {
         try {
             const requestOptions = {
                 method: 'PATCH',
@@ -42,9 +42,9 @@ export default class EventService {
                     'Content-Type': 'application/json',
                     'Authorization': 'Bearer ' + tokens.access_token
                 },
-                body: JSON.stringify({id, startTime, endTime, description})
+                body: JSON.stringify({id, title, description})
             }
-            const response = await fetch('http://localhost:8080/calendar/events', requestOptions);
+            const response = await fetch('http://localhost:8080/library/books', requestOptions);
             return await response.json();
         } catch (e) {
             alert(e)
@@ -52,7 +52,7 @@ export default class EventService {
     };
 
 
-    static async save(tokens, description, startTime, endTime) {
+    static async save(tokens, description, title) {
         try {
             const requestOptions = {
                 method: 'POST',
@@ -61,18 +61,18 @@ export default class EventService {
                     'Content-Type': 'application/json',
                     'Authorization': 'Bearer ' + tokens.access_token
                 },
-                body: JSON.stringify({description, startTime, endTime})
+                body: JSON.stringify({description, title})
             }
-            const response = await fetch('http://localhost:8080/calendar/events', requestOptions);
+            const response = await fetch('http://localhost:8080/library/books', requestOptions);
             return await response.json();
         } catch (e) {
             alert(e)
         }
     };
 
-    static async getParticipants(tokens, id) {
+    static async getAnotherAuthors(tokens, id) {
         try {
-            const response = await fetch('http://localhost:8080/calendar/events/users/' + id, {
+            const response = await fetch('http://localhost:8080/library/books/authors/' + id, {
                 method: 'GET',
                 mode: 'cors',
                 headers: {
@@ -85,7 +85,7 @@ export default class EventService {
         }
     };
 
-    static async addParticipant(tokens, id, email) {
+    static async addAuthor(tokens, id, email) {
         try {
             const requestOptions = {
                 method: 'POST',
@@ -98,7 +98,7 @@ export default class EventService {
                     "email": email
                 })
             }
-            const response = await fetch('http://localhost:8080/calendar/events/' + id, requestOptions);
+            const response = await fetch('http://localhost:8080/library/books/' + id, requestOptions);
             if(response.status !==200) {
                 return await response.json();
             } else {

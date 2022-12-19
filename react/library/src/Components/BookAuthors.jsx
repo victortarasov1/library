@@ -1,23 +1,23 @@
 import React, {useState, useEffect} from 'react';
-import EventService from '../API/EventService';
+import BookService from '../API/BookService';
 import {Button} from 'react-bootstrap';
 import EmailForm from './EmailForm';
 import LoginService from '../API/LoginService';
 import Loader from '../UI/Loader/Loader';
-const EventParticipants = ({tokens, setTokens, id}) => {
-    const [participants, setParticipants] = useState([]);
+const BookAuthors = ({tokens, setTokens, id}) => {
+    const [authors, setAuthors] = useState([]);
     const [show, setShow] = useState(false);
     const [loading, setLoading] = useState(false);
     useEffect(() => {
         setLoading(true);
         setTimeout(() => {
-            fetchParticipants();
+            fetchAuthors();
             setLoading(false);
         }, 1000);
     }, []);
 
-    async function fetchParticipants() {
-        const response = await EventService.getParticipants(tokens, id);
+    async function fetchAuthors() {
+        const response = await BookService.getAnotherAuthors(tokens, id);
         if (response.error_message) {
             LoginService.refresh(tokens).then(refresh => {
                 if (refresh.hasError) {
@@ -25,19 +25,19 @@ const EventParticipants = ({tokens, setTokens, id}) => {
                 } else {
                     setTokens(refresh, tokens.refresh_token);
                     console.log(refresh);
-                    EventService.getParticipants(refresh, id).then(d => {
-                        setParticipants(d);
+                    BookService.getAnotherAuthors(refresh, id).then(d => {
+                        setAuthors(d);
                     })
 
                 }
             });
         } else {
-            setParticipants(response);
+            setAuthors(response);
         }
     }
 
     const update = () => {
-        fetchParticipants();
+        fetchAuthors();
         setShow(false);
     }
     return (
@@ -49,16 +49,16 @@ const EventParticipants = ({tokens, setTokens, id}) => {
             ) : (
                 <div>
                     {
-                        participants.length !== 0 ? (
+                        authors.length !== 0 ? (
                             <div>
                                 {
-                                    participants.map(participant =>
-                                        <h1> {participant.firstName} </h1>
+                                    authors.map(author =>
+                                        <h1> {author.name} </h1>
                                     )
                                 }
                             </div>
                         ) : (
-                            <h1> this is only your event! </h1>
+                            <h1> this is only your book! </h1>
                         )
                     }
                     <div>
@@ -67,7 +67,7 @@ const EventParticipants = ({tokens, setTokens, id}) => {
                                 <EmailForm tokens={tokens} setTokens={setTokens} id={id} update={update}/>
                             ) : (
                                 <div>
-                                    <Button onClick={() => setShow(true)}> add participant</Button>
+                                    <Button onClick={() => setShow(true)}> add author</Button>
                                     <br/>
                                 </div>
                             )
@@ -78,4 +78,4 @@ const EventParticipants = ({tokens, setTokens, id}) => {
         </div>
     );
 };
-export default EventParticipants;
+export default BookAuthors;

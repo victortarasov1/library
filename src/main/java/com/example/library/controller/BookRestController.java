@@ -1,5 +1,6 @@
 package com.example.library.controller;
 
+import com.example.library.dto.AuthorDto;
 import com.example.library.dto.BookDto;
 import com.example.library.dto.EmailDto;
 import com.example.library.exception.AuthorContainsBookException;
@@ -45,6 +46,14 @@ public class BookRestController {
                 .orElseThrow(AuthorDoesntContainsBookException::new);
         author.addBook(book);
         authorRepository.save(author);
+    }
+
+    @PreAuthorize("hasRole('ROLE_USER')")
+    @GetMapping("/authors/{id}")
+    public List<AuthorDto> getBookAuthors(Principal principal, @PathVariable Long id) {
+        bookRepository.checkIfAuthorContainsBookById(id, principal.getName())
+                .orElseThrow(AuthorDoesntContainsBookException::new);
+        return authorRepository.getAnotherBookAuthors(principal.getName(), id).stream().map(author -> modelMapper.map(author, AuthorDto.class)).toList();
     }
     @PreAuthorize("hasRole('ROLE_USER')")
     @PatchMapping
