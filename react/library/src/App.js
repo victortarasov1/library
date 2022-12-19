@@ -5,6 +5,7 @@ import React, {useState} from 'react';
 import Author from './Components/Author';
 import Login from './Components/Login';
 import AuthorList from './Components/AuthorList';
+import FullBookList from "./Components/FullBookList";
 function App() {
     const [login, setLogin] = useState(false);
     const [modal, setModal] = useState(false);
@@ -13,6 +14,7 @@ function App() {
     <div className="App">
       <header className = "App-header">
         <a href = "/"> authors </a>
+          <a href = "/books"> books </a>
           <div style={{textAlign: 'right'}}>
               <Button variant="dark" onClick={() => {
                   tokens ? (window.location.reload(false)) : (setLogin(true))
@@ -22,6 +24,7 @@ function App() {
       </header>
       <Routes>
         <Route path = "/" element = {  <AuthorList/>}/>
+          <Route path= "/books" element = { <FullBookList/>} />
       </Routes>
         <Modal show={login} onHide={setLogin}>
             <Login setTokens={setTokens} setModal={setLogin}/>

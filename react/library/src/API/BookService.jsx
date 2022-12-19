@@ -1,5 +1,20 @@
 export default class BookService {
-
+    static async getAll() {
+        try {
+            const response = await fetch('http://localhost:8080/library/books');
+            return await response.json();
+        } catch (e) {
+            alert(e);
+        }
+    };
+    static async getAuthors(id) {
+        try {
+            const response = await fetch('http://localhost:8080/library/books/' + id);
+            return await response.json();
+        } catch (e) {
+            alert(e);
+        }
+    };
     static async get(tokens) {
         try {
             const requestOptions = {
