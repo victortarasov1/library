@@ -21,7 +21,7 @@ const FullBook = ({book, setOpen}) => {
     }
     return (
       <div className="item">
-          <h1> book.description</h1>
+          <h1> {book.description}</h1>
           {loading ? (
               <div style={{display: 'flex', justifyContent: 'center'}}>
                   <Loader/>

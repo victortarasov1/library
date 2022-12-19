@@ -69,7 +69,7 @@ public class LibraryRestController {
 
     @GetMapping("/books")
     public List<BookDto> getBooks() {
-        return bookRepository.getBooksWithAuthors().stream().map(book -> modelMapper.map(book, BookDto.class)).toList();
+        return bookRepository.getBooksWithAuthors().stream().distinct().map(book -> modelMapper.map(book, BookDto.class)).toList();
     }
 
     @GetMapping("/books/{id}")
