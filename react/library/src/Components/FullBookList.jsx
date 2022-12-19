@@ -1,13 +1,11 @@
 import React, {useState, useEffect} from 'react';
 import BookService from '../API/BookService';
-import {Button, Modal} from 'react-bootstrap';
 import Loader from '../UI/Loader/Loader';
 import FullBook from "./FullBook";
 
 const FullBookList = () => {
     const [books, setBooks] = useState([]);
     const [loading, setLoading] = useState(false);
-    const [open, setOpen] = useState(false);
     useEffect(() => {
         setLoading(true);
         setTimeout(() => {
@@ -31,17 +29,7 @@ const FullBookList = () => {
                     {books.length ? (
                         <div>
                             {books.map(book =>
-                                <div className="item">
-                                    <h1> {book.title} </h1>
-                                    <Button onClick={() => setOpen(true)}> open </Button>
-                                    {
-                                        open ? (
-                                            <FullBook book={book} setOpen={setOpen} />
-                                        ) : (
-                                            <br/>
-                                        )
-                                    }
-                                </div>
+                                <FullBook book={book} />
                             )}
                         </div>
                     ) : (
