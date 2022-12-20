@@ -1,12 +1,12 @@
 package com.example.library.model;
 
 
+import com.example.library.exception.AuthorContainsBookException;
+import com.example.library.exception.AuthorDoesntContainsBookException;
+import com.example.library.exception.BookNotFoundException;
 import lombok.*;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 import javax.persistence.*;
 
@@ -27,23 +27,31 @@ public class Author {
     private int age;
     private Actuality actuality;
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<Book> books;
+    private Set<Book> books;
+
+    @Column(name = "role")
+    private Role role;
+
+    private String password;
+    private String email;
 
     public void addBook(Book book) {
         if(books != null) {
-            var tmp = books;
-            books = new LinkedList<>();
-            books.addAll(tmp);
+            if(books.contains(book)) {
+                throw new AuthorContainsBookException();
+            }
             books.add(book);
         } else {
-            books = new LinkedList<>();
+            books = new HashSet<>();
             books.add(book);
         }
     }
 
     public void removeBook(Book book) {
-        if(books != null){
+        if(books != null && books.contains(book)){
             books.remove(book);
+        } else {
+            throw new AuthorDoesntContainsBookException();
         }
     }
 }

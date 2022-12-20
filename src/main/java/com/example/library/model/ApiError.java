@@ -23,6 +23,7 @@ public class ApiError {
         this.message = message;
         this.debugMessage = debugMessage;
         errors = new ArrayList<>();
+        errors.add(message);
         errors.add(debugMessage);
     }
 

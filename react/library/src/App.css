@@ -33,6 +33,7 @@
   padding-top: 25px;
   padding-bottom: 25px;
 }
+
 .list {
   box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
   margin-left: auto;
@@ -40,14 +41,12 @@
   margin-top: 50px;
   max-width: 500px;
 }
+
 .item {
   word-wrap: break-word;
   max-width: 500px;
   margin: auto;
-  padding-left: 25px;
-  padding-right: 25px;
-  padding-top: 25px;
-  padding-bottom: 25px;
+  padding: 25px;
 
 }
 @keyframes App-logo-spin {
