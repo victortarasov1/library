@@ -17,7 +17,7 @@ public class BookDto {
 	private Long id;
 	@Size(min = 1, max = 30, message ="title must be between 1 and 30 literals")
 	private String title;
-	@Size(min = 0, max = 100, message ="description must be between 0 and 100 literals")
+	@Size(min = 10, max = 100, message ="description must be between 10 and 100 literals")
 	private String description;
 	public Book toBook() {
 		Book book = new Book();
