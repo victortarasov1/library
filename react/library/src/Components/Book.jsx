@@ -12,9 +12,8 @@ const Book = ({tokens, setTokens, book, change, remove}) => {
     }
     return (
         <div className="item">
-            <h1> {book.description} </h1>
             <h1> {book.title} </h1>
-
+            <h1> {book.description} </h1>
             <Modal show={modal} onHide={setModal}> <BookForm tokens={tokens} setTokens={setTokens}  book={book}
                                                              CreateOrUpdate={update}/> </Modal>
             {
