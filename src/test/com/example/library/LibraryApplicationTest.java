@@ -6,7 +6,6 @@ import com.example.library.controller.LibraryRestController;
 import com.example.library.controller.RestExceptionHandler;
 import com.example.library.dto.AuthorFullDto;
 import com.example.library.dto.BookDto;
-import com.example.library.dto.EmailDto;
 import com.example.library.repository.AuthorRepository;
 import com.example.library.repository.BookRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;

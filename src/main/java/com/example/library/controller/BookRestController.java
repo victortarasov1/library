@@ -2,7 +2,6 @@ package com.example.library.controller;
 
 import com.example.library.dto.AuthorDto;
 import com.example.library.dto.BookDto;
-import com.example.library.dto.EmailDto;
 import com.example.library.exception.AuthorContainsBookException;
 import com.example.library.exception.AuthorDoesntContainsBookException;
 import com.example.library.exception.AuthorNotFoundException;
@@ -16,6 +15,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotNull;
 import java.security.Principal;
 import java.util.List;
 
@@ -40,8 +41,8 @@ public class BookRestController {
     @PreAuthorize("hasRole('ROLE_USER')")
     @PostMapping("/{id}")
     public void addAuthor(Principal principal, @PathVariable Long id,@RequestBody @Valid EmailDto dto) {
-        var author = authorRepository.findAuthorByEmailAndActuality(dto.getEmail(), Actuality.ACTIVE)
-                .orElseThrow(() -> new AuthorNotFoundException(dto.getEmail()));
+        var author = authorRepository.findAuthorByEmailAndActuality(dto.email, Actuality.ACTIVE)
+                .orElseThrow(() -> new AuthorNotFoundException(dto.email));
         var book = bookRepository.checkIfAuthorContainsBookById(id, principal.getName())
                 .orElseThrow(AuthorDoesntContainsBookException::new);
         author.addBook(book);
@@ -77,4 +78,6 @@ public class BookRestController {
         author.removeBook(book);
         authorRepository.save(author);
     }
+
+    record EmailDto(@NotNull(message = "email name mst be setted!") @Email  String email){}
 }
