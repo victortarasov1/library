@@ -74,7 +74,7 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
         response.setStatus(FORBIDDEN.value());
         response.setContentType(APPLICATION_JSON_VALUE);
         var errors = new HashMap<String, String>();
-        errors.put("errors", "bad password and/or email");
+        errors.put("debugMessage", "bad password and/or email");
         new ObjectMapper().writeValue(response.getOutputStream(), errors);
     }
 }
