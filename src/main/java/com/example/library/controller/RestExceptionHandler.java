@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.NoHandlerFoundException;
-import com.example.library.model.ApiError;
 
 @RestControllerAdvice
 public class RestExceptionHandler {
@@ -36,10 +35,7 @@ public class RestExceptionHandler {
 	 */
 	@ExceptionHandler(MethodArgumentNotValidException.class)
 	public ResponseEntity<Object> handleInvalidArgument(MethodArgumentNotValidException ex) {
-		List <String> errors = ex.getBindingResult().getAllErrors().stream()
-				.map(error -> error.getDefaultMessage().toString()).collect(Collectors.toList());
-		
-		 ApiError apiError = new ApiError("validation error",ex.getMessage(), errors); 
+		 ApiError apiError = new ApiError("validation error",ex.getMessage());
 		 return new ResponseEntity<>(apiError, HttpStatus.BAD_REQUEST);
 	}
 	/*
@@ -55,8 +51,8 @@ public class RestExceptionHandler {
 	 */
 	@ExceptionHandler(MethodArgumentTypeMismatchException.class)
 	protected ResponseEntity<Object> handleMethodArgumentTypeMismatchException(MethodArgumentTypeMismatchException ex){
-		ApiError apiError = new ApiError();
-		apiError.setMessage(String.format("The parameter '%s' of value '%s' could not be converted to type '%s'", ex.getName(), ex.getValue(), ex.getRequiredType().getSimpleName()));
+
+		var apiError = new ApiError("bad argument type", String.format("The parameter '%s' of value '%s' could not be converted to type '%s'", ex.getName(), ex.getValue(), ex.getRequiredType().getSimpleName()));
 		return new ResponseEntity<>(apiError, HttpStatus.BAD_REQUEST);
 	}
 	/*
@@ -67,4 +63,6 @@ public class RestExceptionHandler {
 		ApiError apiError = new ApiError("No Handler Found", ex.getMessage());
 		return new ResponseEntity<>(apiError, HttpStatus.NOT_FOUND);
 	}
+
+	record ApiError(String message, String debugMessage) {}
 }
