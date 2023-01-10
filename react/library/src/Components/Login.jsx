@@ -11,7 +11,7 @@ const Login = ({setTokens, setModal}) => {
         LoginService.login(email, password).then(data => validation(data));
     };
     const validation = (data) => {
-        data.errors ? alert(data.errors) : set(data);
+        data.debugMessage ? alert(data.debugMessage) : set(data);
     };
     const set = (data) => {
         setTokens(data);

@@ -48,7 +48,7 @@ const AuthorForm = ({author, CreateOrUpdate, tokens, setTokens}) => {
     };
 
     const validation = (data) => {
-        data.errors ? alert(data.errors) : CreateOrUpdate(data);
+        data.debugMessage ? alert(data.debugMessage) : CreateOrUpdate(data);
     }
 
     return (

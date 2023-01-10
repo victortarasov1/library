@@ -29,7 +29,7 @@ const EmailForm = ({tokens, setTokens, id, update}) => {
     };
 
     const validation = (data) => {
-        data.errors ? alert(data.errors) : update();
+        data.debugMessage ? alert(data.debugMessage) : update();
     }
     return (
         <Form className="form" onSubmit={add}>
