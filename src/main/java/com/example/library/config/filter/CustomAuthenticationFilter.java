@@ -49,17 +49,8 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
         var instant = Instant.now();
         var user = (UserDetailsImpl) authResult.getPrincipal();
         var algorithm = Algorithm.HMAC256(SECRET_KEY.getBytes());
-        var access = JWT.create()
-                .withSubject(user.getUsername())
-                .withExpiresAt(instant.plus(ACCESS_TOKEN_TIME, ChronoUnit.MINUTES))
-                .withIssuer(request.getRequestURL().toString())
-                .withClaim("roles", user.getAuthorities().stream().map(GrantedAuthority::getAuthority).toList())
-                .sign(algorithm);
-        var refresh = JWT.create()
-                .withSubject(user.getUsername())
-                .withExpiresAt(instant.plus(REFRESH_TOKEN_TIME, ChronoUnit.MINUTES))
-                .withIssuer(request.getRequestURL().toString())
-                .sign(algorithm);
+        var access = JWT.create().withSubject(user.getUsername()).withExpiresAt(instant.plus(ACCESS_TOKEN_TIME, ChronoUnit.MINUTES)).withIssuer(request.getRequestURL().toString()).withClaim("roles", user.getAuthorities().stream().map(GrantedAuthority::getAuthority).toList()).sign(algorithm);
+        var refresh = JWT.create().withSubject(user.getUsername()).withExpiresAt(instant.plus(REFRESH_TOKEN_TIME, ChronoUnit.MINUTES)).withIssuer(request.getRequestURL().toString()).sign(algorithm);
 
 
         var tokens = new HashMap<String, String>();
