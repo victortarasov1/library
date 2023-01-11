@@ -35,15 +35,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @TestPropertySource(locations = "classpath:test.properties")
 class LibraryApplicationTest {
-
-    @Autowired
-    AuthorRestController authorRestController;
-    @Autowired
-    LibraryRestController libraryRestController;
-    @Autowired
-    BookRestController bookRestController;
-    @Autowired
-    RestExceptionHandler restExceptionHandler;
     @Autowired
     AuthorRepository authorRepository;
     @Autowired
@@ -56,10 +47,6 @@ class LibraryApplicationTest {
     private MockMvc mockMvc;
     @Test
     public void contextLoads() {
-        assertThat(libraryRestController).isNotNull();
-        assertThat(authorRestController).isNotNull();
-        assertThat(bookRestController).isNotNull();
-        assertThat(restExceptionHandler).isNotNull();
         assertThat(encoder).isNotNull();
         assertThat(objectMapper).isNotNull();
         assertThat(authorRepository).isNotNull();
@@ -111,7 +98,7 @@ class LibraryApplicationTest {
                         .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                         .param("password", password)
                         .param("email", email))
-                .andExpect(jsonPath("errors", equalTo("bad password and/or email")));
+                .andExpect(jsonPath("debugMessage", equalTo("bad password and/or email")));
     }
 
     @Test
@@ -288,6 +275,7 @@ class LibraryApplicationTest {
 
     @Test
     public void addAuthorToBook() throws Exception {
+        record EmailDto(String email) {}
         //given
         var email = "first@gmail.com";
         var password = "112101";
@@ -360,12 +348,12 @@ class LibraryApplicationTest {
         String access = JsonPath.parse(tokens.getResponse().getContentAsString()).read("access_token");
 
         var dto = new BookDto(0L, "title", "changed book");
-        var errors = new String[] {"This data is not acceptable!", "author doesnt contains this book"};
+        var errors = new String[] {"author doesnt contains this book"};
         this.mockMvc.perform(patch("/library/books")
                         .header("Authorization", "Bearer " + access)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(dto)))
-                .andExpect(jsonPath("errors", equalTo(List.of(errors))));
+                .andExpect(jsonPath("debugMessage", equalTo(List.of(errors))));
     }
 
 
@@ -386,7 +374,7 @@ class LibraryApplicationTest {
                         .header("Authorization", "Bearer " + access)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(dto)))
-                .andExpect(jsonPath("errors", equalTo(List.of("description must be between 10 and 100 literals"))));
+                .andExpect(jsonPath("debugMessage", equalTo(List.of("description must be between 10 and 100 literals"))));
     }
     @Test
     public void addAuthor_shouldReturnExceptionHandleHttpMessageNotReadable() throws Exception {
@@ -413,7 +401,7 @@ class LibraryApplicationTest {
         //then
         this.mockMvc.perform(delete("/library/books/" + "fff")
                         .header("Authorization", "Bearer " + access))
-                .andExpect(jsonPath("message", equalTo("The parameter 'id' of value 'fff' could not be converted to type 'Long'")));
+                .andExpect(jsonPath("debugMessage", equalTo(List.of("The parameter 'id' of value 'fff' could not be converted to type 'Long'"))));
 
     }
     @Test
