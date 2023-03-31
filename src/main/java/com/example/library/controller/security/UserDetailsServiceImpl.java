@@ -1,7 +1,7 @@
-package com.example.library.service;
+package com.example.library.controller.security;
 
 import com.example.library.exception.AuthorNotFoundException;
-import com.example.library.model.UserDetailsImpl;
+import com.example.library.model.AuthorUserDetails;
 import com.example.library.repository.AuthorRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -15,6 +15,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     private final AuthorRepository authorRepository;
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return new UserDetailsImpl(authorRepository.findByEmail(username).orElseThrow(() -> new AuthorNotFoundException(username)));
+        return new AuthorUserDetails(authorRepository.findByEmail(username).orElseThrow(() -> new AuthorNotFoundException(username)));
     }
 }

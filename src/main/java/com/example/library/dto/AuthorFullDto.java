@@ -4,7 +4,7 @@ import javax.validation.constraints.*;
 
 import com.example.library.model.Author;
 import com.example.library.model.Actuality;
-import com.example.library.model.Role;
+import com.example.library.enums.Role;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

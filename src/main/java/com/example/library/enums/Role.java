@@ -1,4 +1,4 @@
-package com.example.library.model;
+package com.example.library.enums;
 
 import org.springframework.security.core.GrantedAuthority;
 

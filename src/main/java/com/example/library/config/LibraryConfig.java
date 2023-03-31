@@ -1,15 +1,8 @@
 package com.example.library.config;
 
-import javax.validation.Validation;
-import javax.validation.Validator;
-import javax.validation.ValidatorFactory;
-
-import org.hibernate.validator.HibernateValidator;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.validation.beanvalidation.SpringConstraintValidatorFactory;
 
 @Configuration
 public class LibraryConfig {
