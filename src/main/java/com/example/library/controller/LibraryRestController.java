@@ -27,7 +27,7 @@ public class LibraryRestController {
 
     @GetMapping
     public List<AuthorDto> findAll() {
-        return authorRepository.findAllByActuality(Actuality.ACTIVE).stream().map(author -> modelMapper.map(author, AuthorDto.class)).toList();
+        return authorRepository.findAll(Actuality.ACTIVE).stream().map(author -> modelMapper.map(author, AuthorDto.class)).toList();
     }
 
 

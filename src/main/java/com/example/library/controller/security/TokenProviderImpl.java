@@ -69,7 +69,7 @@ public class TokenProviderImpl implements TokenProvider {
             var verifier = JWT.require(algorithm).build();
             var decoderJWT = verifier.verify(refreshToken);
             var username = decoderJWT.getSubject();
-            var user = new AuthorUserDetails(repository.findAuthorByEmailAndActuality(username, Actuality.ACTIVE)
+            var user = new AuthorUserDetails(repository.findByEmail(username)
                     .orElseThrow(() -> new AuthorNotFoundException(username)));
             return Map.of(Token.ACCESS_TOKEN.getTokenType(), generateAccessToken(requestUrl, user));
         } catch (TokenExpiredException | JWTDecodeException | AuthorNotFoundException ex) {

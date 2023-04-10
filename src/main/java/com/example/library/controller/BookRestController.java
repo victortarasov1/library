@@ -32,7 +32,7 @@ public class BookRestController {
     @PreAuthorize("hasRole('ROLE_USER')")
     @PostMapping
     public BookDto addBook(Principal principal, @RequestBody @Valid BookDto dto) throws AuthorContainsBookException {
-        var author = authorRepository.findAuthorByEmailAndActuality(principal.getName(), Actuality.ACTIVE)
+        var author = authorRepository.findByEmail(principal.getName())
                 .orElseThrow(() -> new AuthorNotFoundException(principal.getName()));
         author.addBook(dto.toBook());
         return modelMapper.map(authorRepository.save(author).getBooks().stream().filter(e -> e.equals(dto.toBook())).toList().get(0), BookDto.class);
@@ -41,7 +41,7 @@ public class BookRestController {
     @PreAuthorize("hasRole('ROLE_USER')")
     @PostMapping("/{id}")
     public void addAuthor(Principal principal, @PathVariable Long id,@RequestBody @Valid EmailDto dto) {
-        var author = authorRepository.findAuthorByEmailAndActuality(dto.email, Actuality.ACTIVE)
+        var author = authorRepository.findByEmail(dto.email)
                 .orElseThrow(() -> new AuthorNotFoundException(dto.email));
         var book = bookRepository.checkIfAuthorContainsBookById(id, principal.getName())
                 .orElseThrow(AuthorDoesntContainsBookException::new);
@@ -73,7 +73,7 @@ public class BookRestController {
     @PreAuthorize("hasRole('ROLE_USER')")
     @DeleteMapping("/{id}")
     public void deleteBook(Principal principal, @PathVariable Long id) {
-        var author = authorRepository.findAuthorByEmailAndActuality(principal.getName(), Actuality.ACTIVE).orElseThrow(() -> new AuthorNotFoundException(principal.getName()));
+        var author = authorRepository.findByEmail(principal.getName()).orElseThrow(() -> new AuthorNotFoundException(principal.getName()));
         var book = bookRepository.checkIfAuthorContainsBookById(id, principal.getName()).orElseThrow(() -> new BookNotFoundException(id));
         author.removeBook(book);
         authorRepository.save(author);

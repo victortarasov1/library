@@ -35,7 +35,7 @@ public class AuthorRestController {
     @PreAuthorize("hasRole('ROLE_USER')")
     @GetMapping
     public AuthorFullDto getAuthor(Principal principal) {
-        var author = authorRepository.findAuthorByEmailAndActuality(principal.getName(), Actuality.ACTIVE)
+        var author = authorRepository.findByEmail(principal.getName())
                 .orElseThrow(() -> new AuthorNotFoundException(principal.getName()));
         author.setPassword(null);
         return modelMapper.map(author, AuthorFullDto.class);
@@ -44,14 +44,14 @@ public class AuthorRestController {
     @PreAuthorize("hasRole('ROLE_USER')")
     @PatchMapping
     public AuthorFullDto changeAuthor(Principal principal, @RequestBody @Valid AuthorFullDto dto) {
-        var author = authorRepository.findAuthorByEmailAndActuality(principal.getName(), Actuality.ACTIVE)
+        var author = authorRepository.findByEmail(principal.getName())
                 .orElseThrow(() -> new AuthorNotFoundException(principal.getName()));
         author.setAge(dto.getAge());
         author.setSecondName(dto.getSecondName());
         author.setName(dto.getName());
         author.setEmail(dto.getEmail());
         author.setPassword(encoder.encode(dto.getPassword()));
-        if (authorRepository.findEqualsAuthors(author.getEmail(), author.getName(), author.getSecondName(), author.getId()).isPresent()) {
+        if (authorRepository.findAuthorByEmailAndNameAndSecondNameAndIdNot(author.getEmail(), author.getName(), author.getSecondName(), author.getId()).isPresent()) {
             throw new AuthorNotUniqueException();
         }
         var updated = authorRepository.save(author);
@@ -63,8 +63,8 @@ public class AuthorRestController {
     @PreAuthorize("hasRole('ROLE_USER')")
     @DeleteMapping
     public void deleteAuthorById(Principal principal) {
-        var author = authorRepository.findAuthorByEmailAndActuality(principal.getName(), Actuality.ACTIVE).orElseThrow(() -> new AuthorNotFoundException(principal.getName()));
-        author.setActuality(Actuality.REMOVED);
+        var author = authorRepository.findByEmail(principal.getName()).orElseThrow(() -> new AuthorNotFoundException(principal.getName()));
+     //   author.setActuality(Actuality.REMOVED);
         authorRepository.save(author);
     }
 }

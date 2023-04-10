@@ -25,7 +25,6 @@ public class Author {
     @Column(name = "second_name")
     private String secondName;
     private int age;
-    private Actuality actuality;
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<Book> books;
 
