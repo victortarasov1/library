@@ -16,7 +16,7 @@ import java.util.Set;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode
+@EqualsAndHashCode(of = "id")
 public class Author {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,7 +26,7 @@ public class Author {
     private String secondName;
     private int age;
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Set<Book> books;
+    private Set<Book> books = new HashSet<>();
 
     @Column(name = "role")
     private Role role;
@@ -52,5 +52,9 @@ public class Author {
         } else {
             throw new AuthorDoesntContainsBookException();
         }
+    }
+
+    public boolean containsBook(String title) {
+        return books.stream().anyMatch(book -> book.getTitle().equals(title));
     }
 }

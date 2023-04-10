@@ -48,11 +48,9 @@ public class LibraryRestController {
 
     @GetMapping("/books/{id}")
     public List<AuthorDto> getAuthors(@PathVariable Long id) {
-        var authors = authorRepository.getAuthorsOfBook(id);
-        if (authors == null) {
-            throw new BookNotFoundException(id);
-        }
-        return authors.stream().map(author -> modelMapper.map(author, AuthorDto.class)).toList();
+        return bookRepository.getBookAndAuthorsById(id)
+                .orElseThrow(() -> new BookNotFoundException(id))
+                .getAuthors().stream().map(AuthorDto::new).toList();
     }
 
 }

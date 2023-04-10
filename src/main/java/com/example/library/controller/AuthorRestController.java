@@ -4,7 +4,6 @@ import com.example.library.dto.AuthorFullDto;
 import com.example.library.dto.BookDto;
 import com.example.library.exception.AuthorNotFoundException;
 import com.example.library.exception.AuthorNotUniqueException;
-import com.example.library.model.Actuality;
 import com.example.library.repository.AuthorRepository;
 import com.example.library.repository.BookRepository;
 import lombok.AllArgsConstructor;
@@ -29,7 +28,9 @@ public class AuthorRestController {
     @PreAuthorize("hasRole('ROLE_USER')")
     @GetMapping("/books")
     public List<BookDto> getAuthorBooks(Principal principal) {
-        return bookRepository.getBooksByAuthorEmail(principal.getName()).stream().map(book -> modelMapper.map(book, BookDto.class)).toList();
+        return authorRepository.findAuthorAndBooksByEmail(principal.getName())
+                .orElseThrow(() -> new AuthorNotFoundException(principal.getName()))
+                .getBooks().stream().map(BookDto::new).toList();
     }
 
     @PreAuthorize("hasRole('ROLE_USER')")
@@ -64,7 +65,7 @@ public class AuthorRestController {
     @DeleteMapping
     public void deleteAuthorById(Principal principal) {
         var author = authorRepository.findByEmail(principal.getName()).orElseThrow(() -> new AuthorNotFoundException(principal.getName()));
-     //   author.setActuality(Actuality.REMOVED);
+        //   author.setActuality(Actuality.REMOVED);
         authorRepository.save(author);
     }
 }

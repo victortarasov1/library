@@ -6,7 +6,6 @@ import com.example.library.exception.AuthorContainsBookException;
 import com.example.library.exception.AuthorDoesntContainsBookException;
 import com.example.library.exception.AuthorNotFoundException;
 import com.example.library.exception.BookNotFoundException;
-import com.example.library.model.Actuality;
 import com.example.library.repository.AuthorRepository;
 import com.example.library.repository.BookRepository;
 import lombok.AllArgsConstructor;
@@ -40,7 +39,7 @@ public class BookRestController {
 
     @PreAuthorize("hasRole('ROLE_USER')")
     @PostMapping("/{id}")
-    public void addAuthor(Principal principal, @PathVariable Long id,@RequestBody @Valid EmailDto dto) {
+    public void addAuthor(Principal principal, @PathVariable Long id, @RequestBody @Valid EmailDto dto) {
         var author = authorRepository.findByEmail(dto.email)
                 .orElseThrow(() -> new AuthorNotFoundException(dto.email));
         var book = bookRepository.checkIfAuthorContainsBookById(id, principal.getName())
@@ -52,22 +51,23 @@ public class BookRestController {
     @PreAuthorize("hasRole('ROLE_USER')")
     @GetMapping("/authors/{id}")
     public List<AuthorDto> getBookAuthors(Principal principal, @PathVariable Long id) {
-        bookRepository.checkIfAuthorContainsBookById(id, principal.getName())
-                .orElseThrow(AuthorDoesntContainsBookException::new);
-        return authorRepository.getAnotherBookAuthors(principal.getName(), id).stream().map(author -> modelMapper.map(author, AuthorDto.class)).toList();
+        return bookRepository.getBookAndAuthorsById(id)
+                .orElseThrow(() -> new BookNotFoundException(id))
+                .getAuthors().stream().filter(author -> !author.getEmail().equals(principal.getName()))
+                .map(AuthorDto::new).toList();
     }
+
     @PreAuthorize("hasRole('ROLE_USER')")
     @PatchMapping
-    public BookDto changeBook(Principal principal, @RequestBody @Valid BookDto dto) {
-        var books = bookRepository.checkIdAuthorContainsBooksWithSameTitle(principal.getName(), dto.getId(), dto.getTitle());
-        if (books.size() > 1) {
+    public void changeBook(Principal principal, @RequestBody @Valid BookDto dto) {
+        var author = authorRepository.findAuthorAndBooksByEmail(principal.getName())
+                .orElseThrow(() -> new AuthorNotFoundException(principal.getName()));
+        var book = author.getBooks().stream().filter(b -> b.getId().equals(dto.getId())).findFirst()
+                .orElseThrow(() -> new BookNotFoundException(dto.getId()));
+        if (!book.getTitle().equals(dto.getTitle()) && author.containsBook(dto.getTitle()))
             throw new AuthorContainsBookException();
-        }
-        var changed = bookRepository.checkIfAuthorContainsBookById(dto.getId(), principal.getName())
-                .orElseThrow(AuthorDoesntContainsBookException::new);
-        changed.setTitle(dto.getTitle());
-        changed.setDescription(dto.getDescription());
-        return modelMapper.map(bookRepository.save(changed), BookDto.class);
+        book.setTitle(dto.getTitle());
+        book.setDescription(dto.getDescription());
     }
 
     @PreAuthorize("hasRole('ROLE_USER')")
@@ -79,5 +79,6 @@ public class BookRestController {
         authorRepository.save(author);
     }
 
-    record EmailDto(@NotNull(message = "email name mst be setted!") @Email  String email){}
+    record EmailDto(@NotNull(message = "email name mst be setted!") @Email String email) {
+    }
 }
