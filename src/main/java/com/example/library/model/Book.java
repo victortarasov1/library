@@ -22,4 +22,8 @@ public class Book {
     private String description;
     @ManyToMany(mappedBy = "books", fetch = FetchType.LAZY)
     Set<Author> authors = new HashSet<>();
+
+    public void addAuthor(Author author) {
+        authors.add(author);
+    }
 }
