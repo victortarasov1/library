@@ -35,15 +35,9 @@ public class Author {
     private String email;
 
     public void addBook(Book book) {
-        if (books != null) {
-            if (books.contains(book)) {
-                throw new AuthorContainsBookException();
-            }
-            books.add(book);
-        } else {
-            books = new HashSet<>();
-            books.add(book);
-        }
+        if (books.contains(book)) throw new AuthorContainsBookException();
+        books.add(book);
+        book.addAuthor(this);
     }
 
     public void removeBook(Book book) {
